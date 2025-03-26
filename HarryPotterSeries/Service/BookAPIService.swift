@@ -3,13 +3,14 @@ import Foundation
 struct BookAPIService {
     static let shared = BookAPIService()
 
-    /// JSON 파일에서 책 목록을 가져오는 메서드
-    /// - Returns: Book 배열 또는 오류 시 `nil` 반환
-    func fetchBooks() -> [Book]? {
+    /// JSON 파일에서 책 데이터를 가져오는 메서드
+    /// - Returns: 성공 시 `Book` 객체 배열을 포함한 `.success`를 반환하며,
+    ///   실패 시 `BookAPIError`를 포함한 `.failure`를 반환
+    func fetchBooks() -> Result<[Book], BookAPIError> {
         guard let path = Bundle.main.path(forResource: DataFile.name, ofType: DataFile.type) else {
             AppLogger.api.error("\(Logging.Message.invaliedPath)")
 
-            return nil
+            return .failure(.invalidPath)
         }
 
         do {
@@ -23,11 +24,11 @@ struct BookAPIService {
                 return book
             }
 
-            return books
+            return .success(books)
         } catch {
-            AppLogger.api.error("\(Logging.Message.jsonDecodingError)")
+            AppLogger.api.error("\(Logging.Message.jsonDecodingError)\(error.localizedDescription)")
 
-            return nil
+            return .failure(.jsonDecodingError)
         }
     }
 }

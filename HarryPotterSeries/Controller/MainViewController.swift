@@ -10,13 +10,23 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let books = BookAPIService.shared.fetchBooks() {
-            self.books = books
-        }
+        fetchBooks()
 
         configureUI()
     }
+    
+    /// 책 데이터를 가져오고 `books` 프로퍼티 업데이트하는 메서드
+    /// 데이터를 가져오는데 실패하면 함수 종료
+    private func fetchBooks() {
+        switch BookAPIService.shared.fetchBooks() {
+        case .success(let success):
+            books = success
+        case .failure(let failure):
+            return
+        }
+    }
 
+    /// UI 설정 함수
     private func configureUI() {
         view.backgroundColor = .white
 
