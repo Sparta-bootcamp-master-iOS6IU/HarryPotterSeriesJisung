@@ -14,7 +14,7 @@ class MainViewController: UIViewController {
 
         configureUI()
     }
-    
+
     /// 책 데이터를 가져오고 `books` 프로퍼티 업데이트하는 메서드
     /// 데이터를 가져오는데 실패하면 함수 종료
     private func fetchBooks() {
