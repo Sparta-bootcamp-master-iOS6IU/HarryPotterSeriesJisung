@@ -5,7 +5,7 @@ struct BookAPIService {
     static let shared = BookAPIService()
 
     func fetchBooks() -> [Book]? {
-        guard let path = Bundle.main.path(forResource: "data", ofType: "json") else {
+        guard let path = Bundle.main.path(forResource: DataFile.name, ofType: DataFile.type) else {
             AppLogger.api.error("\(Logging.Message.invaliedPath)")
 
             return nil
