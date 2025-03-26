@@ -6,6 +6,8 @@ struct BookAPIService {
 
     func fetchBooks() -> [Book]? {
         guard let path = Bundle.main.path(forResource: "data", ofType: "json") else {
+            AppLogger.api.error("\(Logging.Message.invaliedPath)")
+
             return nil
         }
 
@@ -22,6 +24,8 @@ struct BookAPIService {
 
             return books
         } catch {
+            AppLogger.api.error("\(Logging.Message.jsonDecodingError)")
+
             return nil
         }
     }
