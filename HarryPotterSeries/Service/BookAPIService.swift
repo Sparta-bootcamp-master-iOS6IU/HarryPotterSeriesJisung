@@ -14,7 +14,7 @@ struct BookAPIService {
     func fetchBooks(completion: @escaping (Result<[Book], BookAPIError>) -> Void) {
         DispatchQueue.global().async {
             guard let path = Bundle.main.path(forResource: DataFile.name, ofType: DataFile.type) else {
-                AppLogger.api.error("\(Logging.Message.invaliedPath)")
+                AppLogger.api.error("\(Logging.Message.invalidPath)")
                 completion(.failure(.invalidPath))
 
                 return

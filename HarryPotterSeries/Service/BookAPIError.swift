@@ -1,4 +1,4 @@
 enum BookAPIError: Error {
-    case invalidPath
-    case jsonDecodingError
+    case invalidPath,
+         jsonDecodingError
 }

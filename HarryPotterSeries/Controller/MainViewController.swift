@@ -25,7 +25,7 @@ final class MainViewController: UIViewController {
                 self.books = success
                 DispatchQueue.main.async { self.updateUI() }
             case .failure(let failure):
-                return
+                DispatchQueue.main.async { self.showErrorAlert(error: failure) }
             }
         }
     }
@@ -57,5 +57,20 @@ final class MainViewController: UIViewController {
 
         seriesOrderButton.setTitle(book.order, for: .normal)
         seriesOrderButton.isHidden = false
+    }
+
+    private func showErrorAlert(error: BookAPIError) {
+        let message: String
+
+        switch error {
+        case .invalidPath:
+            message = Alert.Message.invalidPath
+        case .jsonDecodingError:
+            message = Alert.Message.jsonDecodingError
+        }
+
+        let alert = UIAlertController(title: Alert.error, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Alert.confirm, style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
