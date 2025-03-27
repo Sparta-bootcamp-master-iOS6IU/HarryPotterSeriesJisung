@@ -6,6 +6,7 @@ final class MainViewController: UIViewController {
 
     let bookTitleLabel = BookTitleLabel()
     let seriesOrderButton = SeriesOrderButton()
+    let bookDetailView = BookDetailView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,18 +34,23 @@ final class MainViewController: UIViewController {
     private func configureUI() {
         view.backgroundColor = .white
 
-        [bookTitleLabel, seriesOrderButton]
+        [bookTitleLabel, seriesOrderButton, bookDetailView]
             .forEach { view.addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(Layout.Constraints.insetStandard)
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(Layout.Constraints.insetTopSafeArea)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(Layout.Constraints.insetTopSafeArea)
         }
 
         seriesOrderButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(bookTitleLabel.snp.bottom).offset(Layout.Constraints.spacingBetweenTitleAndSeriesOrder)
-            $0.width.height.equalTo(Layout.SeriesOrderButton.size)
+            $0.width.height.equalTo(Component.SeriesOrderButton.size)
+        }
+
+        bookDetailView.snp.makeConstraints {
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(5)
+            $0.top.equalTo(seriesOrderButton.snp.bottom).offset(20)
         }
     }
 
@@ -57,6 +63,8 @@ final class MainViewController: UIViewController {
 
         seriesOrderButton.setTitle(book.order, for: .normal)
         seriesOrderButton.isHidden = false
+
+        bookDetailView.updateUI(book: book)
     }
 
     private func showErrorAlert(error: BookAPIError) {
