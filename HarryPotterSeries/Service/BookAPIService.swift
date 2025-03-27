@@ -19,7 +19,10 @@ struct BookAPIService {
 
             let books = decodedData.data.enumerated().map { index, bookData -> Book in
                 var book = bookData.attributes
-                book.order = "\(index + 1)"
+
+                let order = "\(index + 1)"
+                book.order = order
+                book.image = DataFile.imageFileNmaePrefix + order
 
                 return book
             }

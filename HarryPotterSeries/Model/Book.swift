@@ -8,6 +8,7 @@ struct Book: Codable {
     let summary: String
     let wiki: String
     let chapters: [Chapter]
+    var image: String
 
     enum CodingKeys: String, CodingKey {
         case title,
@@ -32,5 +33,6 @@ struct Book: Codable {
         summary = try container.decode(String.self, forKey: .summary)
         wiki = try container.decode(String.self, forKey: .wiki)
         chapters = try container.decode([Chapter].self, forKey: .chapters)
+        image = ""
     }
 }
