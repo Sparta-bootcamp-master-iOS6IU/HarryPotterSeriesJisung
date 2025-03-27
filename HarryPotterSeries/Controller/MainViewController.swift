@@ -1,45 +1,37 @@
 import UIKit
 import SnapKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     var books: [Book] = []
 
-    let bookTitleLabel = UILabel()
-    let seriesOrderButton = UIButton()
+    let bookTitleLabel = BookTitleLabel()
+    let seriesOrderButton = SeriesOrderButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        fetchBooks()
-
         configureUI()
+        fetchBooks()
     }
 
-    /// 책 데이터를 가져오고 `books` 프로퍼티 업데이트하는 메서드
-    /// 데이터를 가져오는데 실패하면 함수 종료
+    /// BookAPIService를 통해 책 데이터를 비동기적으로 가져오는 메서드
+    /// 성공했을 경우 UI를 업데이트하고, 실패했을 경우 아무 동작 없이 반환
     private func fetchBooks() {
-        switch BookAPIService.shared.fetchBooks() {
-        case .success(let success):
-            books = success
-        case .failure(let failure):
-            return
+        BookAPIService.shared.fetchBooks { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let success):
+                self.books = success
+                DispatchQueue.main.async { self.updateUI() }
+            case .failure(let failure):
+                return
+            }
         }
     }
 
-    /// UI 설정 함수
     private func configureUI() {
         view.backgroundColor = .white
-
-        bookTitleLabel.text = books[0].title
-        bookTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Layout.FontSize.large))
-        bookTitleLabel.textAlignment = .center
-        bookTitleLabel.numberOfLines = 2
-
-        seriesOrderButton.setTitle(books[0].order, for: .normal)
-        seriesOrderButton.titleLabel?.textAlignment = .center
-        seriesOrderButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(Layout.FontSize.small))
-        seriesOrderButton.layer.cornerRadius = CGFloat(Layout.SeriesOrderButton.radius)
-        seriesOrderButton.backgroundColor = .systemBlue
 
         [bookTitleLabel, seriesOrderButton]
             .forEach { view.addSubview($0) }
@@ -54,5 +46,16 @@ class MainViewController: UIViewController {
             $0.top.equalTo(bookTitleLabel.snp.bottom).offset(Layout.Constraints.spacingBetweenTitleAndSeriesOrder)
             $0.width.height.equalTo(Layout.SeriesOrderButton.size)
         }
+    }
+
+    private func updateUI() {
+        guard let book = books.first else {
+            return
+        }
+
+        bookTitleLabel.text = book.title
+
+        seriesOrderButton.setTitle(book.order, for: .normal)
+        seriesOrderButton.isHidden = false
     }
 }
