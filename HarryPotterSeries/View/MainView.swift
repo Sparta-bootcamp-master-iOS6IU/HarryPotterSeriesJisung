@@ -7,6 +7,7 @@ final class MainView: UIView {
     private let bookDetailView = BookDetailView()
     private let bookDedicationView = BookDedicationView()
     private let bookSummaryView = BookSummaryView()
+    private let chapterView = ChapterView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,7 +24,12 @@ final class MainView: UIView {
     private func configureUI() {
         backgroundColor = .white
 
-        [bookTitleLabel, seriesOrderButton, bookDetailView, bookDedicationView, bookSummaryView]
+        [bookTitleLabel,
+         seriesOrderButton,
+         bookDetailView,
+         bookDedicationView,
+         bookSummaryView,
+         chapterView]
             .forEach { addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
@@ -51,6 +57,11 @@ final class MainView: UIView {
             $0.top.equalTo(bookDedicationView.snp.bottom).offset(Layout.Offset.extraLarge)
             $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
         }
+
+        chapterView.snp.makeConstraints {
+            $0.top.equalTo(bookSummaryView.snp.bottom).offset(Layout.Offset.extraLarge)
+            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+        }
     }
 
     func updateUI(with book: Book) {
@@ -64,5 +75,7 @@ final class MainView: UIView {
         bookDedicationView.updateUI(with: book.dedication)
 
         bookSummaryView.updateUI(with: book.summary)
+
+        chapterView.updateUI(with: book.chapters)
     }
 }

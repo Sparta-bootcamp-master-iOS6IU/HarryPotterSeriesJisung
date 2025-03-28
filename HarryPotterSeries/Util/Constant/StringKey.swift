@@ -4,4 +4,5 @@ enum StringKey {
     static let pages = "Pages"
     static let dedication = "Dedication"
     static let summary = "Summary"
+    static let chapters = "Chapters"
 }
