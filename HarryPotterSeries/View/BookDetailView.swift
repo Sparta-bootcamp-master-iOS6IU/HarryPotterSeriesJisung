@@ -126,7 +126,7 @@ final class BookDetailView: UIView {
         }
     }
 
-    func updateUI(book: Book) {
+    func updateUI(with book: Book) {
         imageView.image = UIImage(named: book.image)
         titleLabel.text = book.title
         authorLabel.text = book.author
