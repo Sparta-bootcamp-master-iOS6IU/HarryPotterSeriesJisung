@@ -14,8 +14,8 @@ final class BookTitleLabel: UILabel {
     }
 
     private func configureUI() {
-        font = .boldSystemFont(ofSize: CGFloat(Layout.FontSize.large))
+        font = .boldSystemFont(ofSize: CGFloat(Font.Size.extraLarge))
         textAlignment = .center
-        numberOfLines = 2
+        numberOfLines = Component.DefaultLabel.numberOfLines
     }
 }

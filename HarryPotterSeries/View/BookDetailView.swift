@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 final class BookDetailView: UIView {
     private let mainStackView = UIStackView()
@@ -97,13 +98,13 @@ final class BookDetailView: UIView {
 
     private func configureHorizontalStackview(_ stackView: UIStackView) {
         stackView.axis = .horizontal
-        stackView.spacing = CGFloat(Layout.BookDetailView.horizontalStackViewSpacing)
+        stackView.spacing = CGFloat(Layout.Spacing.small)
         stackView.alignment = .center
     }
 
     private func setConstraints() {
         mainStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(Layout.BookDetailView.mainStackViewHorizontalInset)
+            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
         }
 
         imageView.snp.makeConstraints {
@@ -112,8 +113,8 @@ final class BookDetailView: UIView {
         }
 
         verticalStackView.snp.makeConstraints {
-            $0.height.equalToSuperview().multipliedBy(Layout.BookDetailView.verticalStackViewHeightMultiplier)
-            $0.leading.equalTo(imageView.snp.trailing).offset(Layout.BookDetailView.verticalStackViewHorizontalSpacing)
+            $0.height.equalToSuperview().multipliedBy(Layout.verticalStackViewHeightMultiplier)
+            $0.leading.equalTo(imageView.snp.trailing).offset(Layout.Offset.large)
         }
 
         titleLabel.snp.makeConstraints {
