@@ -16,6 +16,7 @@ enum Layout {
 
     enum Inset {
         static let large = 20
+        static let medium = 15
         static let tiny = 5
     }
 }

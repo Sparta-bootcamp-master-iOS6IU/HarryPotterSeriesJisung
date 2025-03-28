@@ -104,7 +104,8 @@ final class BookDetailView: UIView {
 
     private func setConstraints() {
         mainStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.medium)
+            $0.top.bottom.equalToSuperview()
         }
 
         imageView.snp.makeConstraints {
