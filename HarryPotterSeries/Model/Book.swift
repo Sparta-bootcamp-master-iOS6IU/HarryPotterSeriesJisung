@@ -10,6 +10,10 @@ struct Book: Codable {
     let chapters: [Chapter]
     var image: String
 
+    var formattedReleasedDate: String {
+        DateFormatterManager.shared.formatDate(from: releaseDate)
+    }
+
     enum CodingKeys: String, CodingKey {
         case title,
              author,

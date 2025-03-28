@@ -131,7 +131,7 @@ final class BookDetailView: UIView {
         authorLabel.text = book.author
 
         releasedTitleLabel.text = StringKey.released
-        releasedLabel.text = book.releaseDate
+        releasedLabel.text = book.formattedReleasedDate
 
         pagesTitleLabel.text = StringKey.pages
         pagesLabel.text = "\(book.pages)"
