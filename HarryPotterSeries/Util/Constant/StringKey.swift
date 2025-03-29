@@ -5,4 +5,5 @@ enum StringKey {
     static let dedication = "Dedication"
     static let summary = "Summary"
     static let chapters = "Chapters"
+    static let dateFormat = "yyyy-MM-dd"
 }

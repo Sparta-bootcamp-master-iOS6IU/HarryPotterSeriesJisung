@@ -130,7 +130,7 @@ final class BookDetailView: UIView {
         imageView.image = UIImage(named: book.image)
         titleLabel.text = book.title
         authorLabel.text = book.author
-        releasedLabel.text = book.formattedReleasedDate
-        pagesLabel.text = "\(book.pages)"
+        releasedLabel.text = book.releaseDate
+        pagesLabel.text = book.pages
     }
 }

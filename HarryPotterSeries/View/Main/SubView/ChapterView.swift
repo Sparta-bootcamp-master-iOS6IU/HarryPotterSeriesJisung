@@ -46,9 +46,9 @@ class ChapterView: UIView {
         return chapterLabel
     }
 
-    func updateUI(with chapters: [Chapter]) {
+    func updateUI(with chapters: [String]) {
         chapters.forEach {
-            let chaterLabel = createChapterLabel(from: $0.title)
+            let chaterLabel = createChapterLabel(from: $0)
 
             chaptersStackView.addArrangedSubview(chaterLabel)
         }

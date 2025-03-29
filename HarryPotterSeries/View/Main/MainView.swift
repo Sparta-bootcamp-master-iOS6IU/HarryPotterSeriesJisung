@@ -82,7 +82,7 @@ final class MainView: UIView {
     func updateUI(with book: Book) {
         bookTitleLabel.text = book.title
 
-        seriesOrderButton.setTitle(book.order, for: .normal)
+        seriesOrderButton.setTitle(book.seriesOrder, for: .normal)
         seriesOrderButton.isHidden = false
 
         bookDetailView.updateUI(with: book)
