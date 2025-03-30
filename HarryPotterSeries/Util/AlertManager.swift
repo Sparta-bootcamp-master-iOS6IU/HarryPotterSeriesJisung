@@ -6,15 +6,15 @@ final class AlertManager {
 
         switch error {
         case .invalidPath:
-            message = Alert.Message.invalidPath
+            message = UIConstant.Alert.invalidPathErrorMessage
         case .jsonDecodingError:
-            message = Alert.Message.jsonDecodingError
+            message = UIConstant.Alert.jsonDecodingErrorMessage
         default:
-            message = Alert.Message.unknownError
+            message = UIConstant.Alert.unknownErrorMessage
         }
 
-        let alert = UIAlertController(title: Alert.error, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Alert.confirm, style: .default, handler: nil))
+        let alert = UIAlertController(title: UIConstant.Alert.errorTitle, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: UIConstant.Alert.confirmButtonTitle, style: .default, handler: nil))
 
         viewController.present(alert, animated: true, completion: nil)
     }

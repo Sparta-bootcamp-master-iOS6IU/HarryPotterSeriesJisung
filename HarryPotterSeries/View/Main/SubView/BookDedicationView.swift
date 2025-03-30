@@ -19,17 +19,17 @@ final class BookDedicationView: UIView {
     }
 
     private func configureUI() {
-        dedicationTitleLabel.text = StringKey.dedication
-        dedicationTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.medium))
+        dedicationTitleLabel.text = UIConstant.StringKey.dedication
+        dedicationTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.medium)
         dedicationTitleLabel.textColor = .black
 
-        dedicationLabel.font = .systemFont(ofSize: CGFloat(Font.Size.tiny))
+        dedicationLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
         dedicationLabel.textColor = .darkGray
-        dedicationLabel.numberOfLines = Component.DefaultLabel.numberOfLines
+        dedicationLabel.numberOfLines = UIConstant.DefaultLabel.numberOfLines
 
         dedicationStackView.axis = .vertical
         dedicationStackView.alignment = .leading
-        dedicationStackView.spacing = CGFloat(Layout.Spacing.small)
+        dedicationStackView.spacing = CGFloat(UIConstant.Spacing.small)
 
         [dedicationTitleLabel, dedicationLabel]
             .forEach { dedicationStackView.addArrangedSubview($0) }

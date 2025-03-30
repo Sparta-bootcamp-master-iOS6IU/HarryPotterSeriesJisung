@@ -13,7 +13,7 @@ struct BookMapper {
                 wiki: book.wiki,
                 chapters: book.chapters.map { $0.title },
                 seriesOrder: seriesOrder,
-                image: DataFile.imageFileNmaePrefix + seriesOrder
+                image: DataConstant.imageFileNmaePrefix + seriesOrder
             )
         }
     }

@@ -22,17 +22,17 @@ final class BookSummaryView: UIView {
     }
 
     private func configureUI() {
-        summaryTitleLabel.text = StringKey.summary
-        summaryTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.medium))
+        summaryTitleLabel.text = UIConstant.StringKey.summary
+        summaryTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.medium)
         summaryTitleLabel.textColor = .black
 
-        summaryLabel.font = .systemFont(ofSize: CGFloat(Font.Size.tiny))
+        summaryLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
         summaryLabel.textColor = .darkGray
-        summaryLabel.numberOfLines = Component.DefaultLabel.numberOfLines
+        summaryLabel.numberOfLines = UIConstant.DefaultLabel.numberOfLines
 
         summaryStackView.axis = .vertical
         summaryStackView.alignment = .leading
-        summaryStackView.spacing = CGFloat(Layout.Spacing.small)
+        summaryStackView.spacing = UIConstant.Spacing.small
 
         [summaryTitleLabel, summaryLabel]
             .forEach { summaryStackView.addArrangedSubview($0) }
@@ -50,7 +50,7 @@ final class BookSummaryView: UIView {
     }
 
     private func collapse() {
-        let ellipsis = String(summary.prefix(Component.Summary.ellipsisThreshold)) + Component.Summary.ellipsis
+        let ellipsis = String(summary.prefix(UIConstant.Summary.ellipsisThreshold)) + UIConstant.Summary.ellipsis
         summaryLabel.text = ellipsis
     }
 

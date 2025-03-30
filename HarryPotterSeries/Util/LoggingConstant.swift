@@ -1,4 +1,4 @@
-enum Logging {
+enum LoggingConstant {
     static let subsystem = "com.meowbutlerdev.HarryPotterSeries"
     static let dataSource = "DataSource"
     static let dateFormat = "DateFormat"

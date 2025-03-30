@@ -6,10 +6,10 @@ struct DateFormatterHelper {
     static func formatDateString(_ releasedDate: String) -> String {
         let formatter = DateFormatterHelper.dateFormatter
 
-        formatter.dateFormat = StringKey.dateFormat
+        formatter.dateFormat = UIConstant.ReleasedDate.dateFormat
 
         guard let date = formatter.date(from: releasedDate) else {
-            AppLogger.dateFormat.error("\(Logging.DateFormat.parseError)")
+            AppLogger.dateFormat.error("\(LoggingConstant.DateFormat.parseError)")
 
             return releasedDate
         }

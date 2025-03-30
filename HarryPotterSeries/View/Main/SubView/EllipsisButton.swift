@@ -17,7 +17,7 @@ final class EllipsisButton: UIButton {
 
     private func configureUI() {
         titleLabel?.textAlignment = .center
-        titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(Font.Size.tiny))
+        titleLabel?.font = UIFont.systemFont(ofSize: UIConstant.FontSize.tiny)
         setTitleColor(.systemBlue, for: .normal)
         backgroundColor = .clear
 
@@ -25,11 +25,11 @@ final class EllipsisButton: UIButton {
     }
 
     private func expand() {
-        setTitle(Component.EllipsisButton.expand, for: .normal)
+        setTitle(UIConstant.EllipsisButton.expand, for: .normal)
     }
 
     private func collapse() {
-        setTitle(Component.EllipsisButton.collapse, for: .normal)
+        setTitle(UIConstant.EllipsisButton.collapse, for: .normal)
     }
 
     func switchTitle() {

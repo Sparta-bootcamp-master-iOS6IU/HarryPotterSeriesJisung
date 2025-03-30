@@ -38,18 +38,18 @@ final class MainView: UIView {
             .forEach { scrollContentView.addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
-            $0.top.equalTo(safeAreaLayoutGuide).offset(Layout.Offset.small)
+            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.top.equalTo(safeAreaLayoutGuide).offset(UIConstant.Offset.small)
         }
 
         seriesOrderButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(bookTitleLabel.snp.bottom).offset(Layout.Offset.medium)
-            $0.width.height.equalTo(Component.SeriesOrderButton.size)
+            $0.top.equalTo(bookTitleLabel.snp.bottom).offset(UIConstant.Offset.medium)
+            $0.width.height.equalTo(UIConstant.SeriesOrderButton.size)
         }
 
         scrollView.snp.makeConstraints {
-            $0.top.equalTo(seriesOrderButton.snp.bottom).offset(Layout.Offset.large)
+            $0.top.equalTo(seriesOrderButton.snp.bottom).offset(UIConstant.Offset.large)
             $0.leading.trailing.bottom.equalToSuperview()
         }
 
@@ -60,27 +60,27 @@ final class MainView: UIView {
 
         bookDetailView.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Layout.Inset.tiny)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(UIConstant.Inset.tiny)
         }
 
         bookDedicationView.snp.makeConstraints {
-            $0.top.equalTo(bookDetailView.snp.bottom).offset(Layout.Offset.extraLarge)
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+            $0.top.equalTo(bookDetailView.snp.bottom).offset(UIConstant.Offset.extraLarge)
+            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
         bookSummaryView.snp.makeConstraints {
-            $0.top.equalTo(bookDedicationView.snp.bottom).offset(Layout.Offset.extraLarge)
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+            $0.top.equalTo(bookDedicationView.snp.bottom).offset(UIConstant.Offset.extraLarge)
+            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
         ellipsisButton.snp.makeConstraints {
             $0.top.equalTo(bookSummaryView.snp.bottom)
-            $0.trailing.equalToSuperview().inset(Layout.Inset.large)
+            $0.trailing.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
         chapterView.snp.makeConstraints {
-            $0.top.equalTo(ellipsisButton.snp.bottom).offset(Layout.Offset.extraLarge)
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+            $0.top.equalTo(ellipsisButton.snp.bottom).offset(UIConstant.Offset.extraLarge)
+            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
             $0.bottom.equalToSuperview()
         }
     }

@@ -18,13 +18,13 @@ class ChapterView: UIView {
     }
 
     private func configureUI() {
-        chaptersTitleLabel.text = StringKey.chapters
-        chaptersTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.medium))
+        chaptersTitleLabel.text = UIConstant.StringKey.chapters
+        chaptersTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.medium)
         chaptersTitleLabel.textColor = .black
 
         chaptersStackView.axis = .vertical
         chaptersStackView.alignment = .leading
-        chaptersStackView.spacing = CGFloat(Layout.Spacing.small)
+        chaptersStackView.spacing = UIConstant.Spacing.small
 
         [chaptersTitleLabel]
             .forEach { chaptersStackView.addArrangedSubview($0) }
@@ -40,7 +40,7 @@ class ChapterView: UIView {
         let chapterLabel = UILabel()
 
         chapterLabel.text = title
-        chapterLabel.font = .systemFont(ofSize: CGFloat(Font.Size.tiny))
+        chapterLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
         chapterLabel.textColor = .darkGray
 
         return chapterLabel

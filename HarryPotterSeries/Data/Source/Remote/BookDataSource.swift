@@ -12,8 +12,8 @@ struct BookDataSource {
     ///   - `.unknownError`: 그 외 오류 발생
     func fetchBooks(completion: @escaping (Result<[Attributes], BookError>) -> Void) {
         DispatchQueue.global().async {
-            guard let path = Bundle.main.path(forResource: DataFile.name, ofType: DataFile.type) else {
-                AppLogger.dataSource.error("\(Logging.DataSource.invalidPath)")
+            guard let path = Bundle.main.path(forResource: DataConstant.name, ofType: DataConstant.type) else {
+                AppLogger.dataSource.error("\(LoggingConstant.DataSource.invalidPath)")
                 completion(.failure(.invalidPath))
 
                 return
@@ -36,9 +36,9 @@ struct BookDataSource {
                 }
 
                 if (error as? DecodingError) != nil {
-                    handleError(Logging.DataSource.jsonDecodingError, .jsonDecodingError)
+                    handleError(LoggingConstant.DataSource.jsonDecodingError, .jsonDecodingError)
                 } else {
-                    handleError(Logging.DataSource.unknownError, .unknownError)
+                    handleError(LoggingConstant.DataSource.unknownError, .unknownError)
                 }
             }
         }

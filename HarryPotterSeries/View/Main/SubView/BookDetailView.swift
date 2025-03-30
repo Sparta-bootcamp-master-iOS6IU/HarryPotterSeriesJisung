@@ -59,29 +59,29 @@ final class BookDetailView: UIView {
     }
 
     private func configureLabels() {
-        titleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.large))
+        titleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.large)
         titleLabel.textColor = .black
-        titleLabel.numberOfLines = Component.DefaultLabel.numberOfLines
+        titleLabel.numberOfLines = UIConstant.DefaultLabel.numberOfLines
 
-        authorTitleLabel.text = StringKey.author
-        authorTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.small))
+        authorTitleLabel.text = UIConstant.StringKey.author
+        authorTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.small)
         authorTitleLabel.textColor = .black
 
-        authorLabel.font = .systemFont(ofSize: CGFloat(Font.Size.medium))
+        authorLabel.font = .systemFont(ofSize: UIConstant.FontSize.medium)
         authorLabel.textColor = .darkGray
 
-        releasedTitleLabel.text = StringKey.released
-        releasedTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.tiny))
+        releasedTitleLabel.text = UIConstant.StringKey.released
+        releasedTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.tiny)
         releasedTitleLabel.textColor = .black
 
-        releasedLabel.font = .systemFont(ofSize: CGFloat(Font.Size.tiny))
+        releasedLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
         releasedLabel.textColor = .gray
 
-        pagesTitleLabel.text = StringKey.pages
-        pagesTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.tiny))
+        pagesTitleLabel.text = UIConstant.StringKey.pages
+        pagesTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.tiny)
         pagesTitleLabel.textColor = .black
 
-        pagesLabel.font = .systemFont(ofSize: CGFloat(Font.Size.tiny))
+        pagesLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
         pagesLabel.textColor = .gray
     }
 
@@ -101,24 +101,24 @@ final class BookDetailView: UIView {
 
     private func configureHorizontalStackview(_ stackView: UIStackView) {
         stackView.axis = .horizontal
-        stackView.spacing = CGFloat(Layout.Spacing.small)
+        stackView.spacing = UIConstant.Spacing.small
         stackView.alignment = .center
     }
 
     private func configureConstraints() {
         detailContainerStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.medium)
+            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.medium)
             $0.top.bottom.equalToSuperview()
         }
 
         imageView.snp.makeConstraints {
-            $0.width.equalTo(Component.BookImage.width)
-            $0.height.equalTo(imageView.snp.width).multipliedBy(Component.BookImage.aspectRatio)
+            $0.width.equalTo(UIConstant.BookImage.width)
+            $0.height.equalTo(imageView.snp.width).multipliedBy(UIConstant.BookImage.aspectRatio)
         }
 
         detailStackView.snp.makeConstraints {
-            $0.height.equalToSuperview().multipliedBy(Layout.verticalStackViewHeightMultiplier)
-            $0.leading.equalTo(imageView.snp.trailing).offset(Layout.Offset.large)
+            $0.height.equalToSuperview().multipliedBy(UIConstant.verticalStackViewHeightMultiplier)
+            $0.leading.equalTo(imageView.snp.trailing).offset(UIConstant.Offset.large)
         }
 
         titleLabel.snp.makeConstraints {

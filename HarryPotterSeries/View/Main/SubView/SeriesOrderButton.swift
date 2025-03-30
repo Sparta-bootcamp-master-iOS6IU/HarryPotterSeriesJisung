@@ -15,8 +15,8 @@ final class SeriesOrderButton: UIButton {
 
     private func configureUI() {
         titleLabel?.textAlignment = .center
-        titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(Font.Size.small))
-        layer.cornerRadius = CGFloat(Component.SeriesOrderButton.radius)
+        titleLabel?.font = UIFont.systemFont(ofSize: UIConstant.FontSize.small)
+        layer.cornerRadius = CGFloat(UIConstant.SeriesOrderButton.radius)
         backgroundColor = .systemBlue
         isHidden = true
     }
