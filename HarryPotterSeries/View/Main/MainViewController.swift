@@ -12,6 +12,8 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
 
         fetchBooks()
+
+        configureBindings()
     }
 
     /// `MainViewModel`을 통해 책 데이터를 비동기적으로 가져오는 메서드
@@ -42,6 +44,10 @@ final class MainViewController: UIViewController {
         mainView.updateUI(with: book)
     }
 
+    private func configureBindings() {
+        mainView.configureEllipsisButtonTarget(target: self, action: #selector(ellipsisButtonTapped))
+    }
+
     /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드
     /// - Parameter error: 발생한 오류
     private func showErrorAlert(error: BookError) {
@@ -50,5 +56,9 @@ final class MainViewController: UIViewController {
 
     private func hideMainView() {
         mainView.isHidden = true
+    }
+
+    @objc func ellipsisButtonTapped() {
+        mainView.ellipsisButtonTapped()
     }
 }

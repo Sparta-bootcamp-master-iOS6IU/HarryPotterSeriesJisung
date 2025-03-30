@@ -9,6 +9,7 @@ final class MainView: UIView {
     private let bookDetailView = BookDetailView()
     private let bookDedicationView = BookDedicationView()
     private let bookSummaryView = BookSummaryView()
+    private let ellipsisButton = EllipsisButton()
     private let chapterView = ChapterView()
 
     override init(frame: CGRect) {
@@ -33,7 +34,7 @@ final class MainView: UIView {
 
         scrollView.addSubview(scrollContentView)
 
-        [bookDetailView, bookDedicationView, bookSummaryView, chapterView]
+        [bookDetailView, bookDedicationView, bookSummaryView, ellipsisButton, chapterView]
             .forEach { scrollContentView.addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
@@ -72,8 +73,13 @@ final class MainView: UIView {
             $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
         }
 
+        ellipsisButton.snp.makeConstraints {
+            $0.top.equalTo(bookSummaryView.snp.bottom)
+            $0.trailing.equalToSuperview().inset(Layout.Inset.large)
+        }
+
         chapterView.snp.makeConstraints {
-            $0.top.equalTo(bookSummaryView.snp.bottom).offset(Layout.Offset.extraLarge)
+            $0.top.equalTo(ellipsisButton.snp.bottom).offset(Layout.Offset.extraLarge)
             $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
             $0.bottom.equalToSuperview()
         }
@@ -92,5 +98,14 @@ final class MainView: UIView {
         bookSummaryView.updateUI(with: book.summary)
 
         chapterView.updateUI(with: book.chapters)
+    }
+
+    func configureEllipsisButtonTarget(target: Any, action: Selector) {
+        ellipsisButton.addTarget(target, action: action, for: .touchUpInside)
+    }
+
+    func ellipsisButtonTapped() {
+        ellipsisButton.switchTitle()
+        bookSummaryView.switchText()
     }
 }
