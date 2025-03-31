@@ -9,7 +9,7 @@ final class MainView: UIView {
     private let bookDetailView = BookDetailView()
     private let bookDedicationView = BookDedicationView()
     private let bookSummaryView = BookSummaryView()
-    private let ellipsisButton = EllipsisButton()
+    private let summaryToggleButton = SummaryToggleButton()
     private let chapterView = ChapterView()
 
     override init(frame: CGRect) {
@@ -34,7 +34,7 @@ final class MainView: UIView {
 
         scrollView.addSubview(scrollContentView)
 
-        [bookDetailView, bookDedicationView, bookSummaryView, ellipsisButton, chapterView]
+        [bookDetailView, bookDedicationView, bookSummaryView, summaryToggleButton, chapterView]
             .forEach { scrollContentView.addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
@@ -73,13 +73,13 @@ final class MainView: UIView {
             $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
-        ellipsisButton.snp.makeConstraints {
+        summaryToggleButton.snp.makeConstraints {
             $0.top.equalTo(bookSummaryView.snp.bottom)
             $0.trailing.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
         chapterView.snp.makeConstraints {
-            $0.top.equalTo(ellipsisButton.snp.bottom).offset(UIConstant.Offset.extraLarge)
+            $0.top.equalTo(summaryToggleButton.snp.bottom).offset(UIConstant.Offset.extraLarge)
             $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
             $0.bottom.equalToSuperview()
         }
@@ -95,17 +95,15 @@ final class MainView: UIView {
 
         bookDedicationView.updateUI(with: book.dedication)
 
-        bookSummaryView.updateUI(with: book.summary)
-
         chapterView.updateUI(with: book.chapters)
     }
 
-    func configureEllipsisButtonTarget(target: Any, action: Selector) {
-        ellipsisButton.addTarget(target, action: action, for: .touchUpInside)
+    func updateSummary(with summary: String, _ buttonTitle: String) {
+        bookSummaryView.updateSummary(with: summary)
+        summaryToggleButton.updateTitle(with: buttonTitle)
     }
 
-    func ellipsisButtonTapped() {
-        ellipsisButton.switchTitle()
-        bookSummaryView.switchText()
+    func configureToggleSummaryButtonTarget(target: Any, action: Selector) {
+        summaryToggleButton.addTarget(target, action: action, for: .touchUpInside)
     }
 }

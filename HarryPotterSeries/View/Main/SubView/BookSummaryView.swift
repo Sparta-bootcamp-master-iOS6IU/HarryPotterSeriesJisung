@@ -6,9 +6,6 @@ final class BookSummaryView: UIView {
     private let summaryTitleLabel = UILabel()
     private let summaryLabel = UILabel()
 
-    private var isExpand = false
-    private var summary = ""
-
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -44,23 +41,7 @@ final class BookSummaryView: UIView {
         }
     }
 
-    func updateUI(with summary: String) {
-        self.summary = summary
-        collapse()
-    }
-
-    private func collapse() {
-        let ellipsis = String(summary.prefix(UIConstant.Summary.ellipsisThreshold)) + UIConstant.Summary.ellipsis
-        summaryLabel.text = ellipsis
-    }
-
-    func switchText() {
-        if isExpand {
-            collapse()
-        } else {
-            summaryLabel.text = summary
-        }
-
-        isExpand.toggle()
+    func updateSummary(with summary: String) {
+        summaryLabel.text = summary
     }
 }

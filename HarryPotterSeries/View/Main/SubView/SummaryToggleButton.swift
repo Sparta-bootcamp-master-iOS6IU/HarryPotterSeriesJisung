@@ -1,8 +1,6 @@
 import UIKit
 
-final class EllipsisButton: UIButton {
-    private var isExpand = true
-
+final class SummaryToggleButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -20,25 +18,9 @@ final class EllipsisButton: UIButton {
         titleLabel?.font = UIFont.systemFont(ofSize: UIConstant.FontSize.tiny)
         setTitleColor(.systemBlue, for: .normal)
         backgroundColor = .clear
-
-        expand()
     }
 
-    private func expand() {
-        setTitle(UIConstant.EllipsisButton.expand, for: .normal)
-    }
-
-    private func collapse() {
-        setTitle(UIConstant.EllipsisButton.collapse, for: .normal)
-    }
-
-    func switchTitle() {
-        if isExpand {
-            collapse()
-        } else {
-            expand()
-        }
-
-        isExpand.toggle()
+    func updateTitle(with title: String) {
+        setTitle(title, for: .normal)
     }
 }

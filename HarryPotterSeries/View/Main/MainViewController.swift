@@ -4,6 +4,8 @@ final class MainViewController: UIViewController {
     private let mainView = MainView()
     private let mainViewModel = MainViewModel()
 
+    let seriesOrder = "1"
+
     override func loadView() {
         view = mainView
     }
@@ -35,17 +37,21 @@ final class MainViewController: UIViewController {
     }
 
     private func updateUI() {
-        let seriesOrder = "1"
-
-        guard let book = mainViewModel.book(by: seriesOrder) else {
-            return
-        }
+        guard let book = mainViewModel.book(by: seriesOrder) else { return }
 
         mainView.updateUI(with: book)
+
+        updateSummary()
+    }
+
+    private func updateSummary() {
+        guard let (summary, buttonTitle) = mainViewModel.summary(by: seriesOrder) else { return }
+
+        mainView.updateSummary(with: summary, buttonTitle)
     }
 
     private func configureBindings() {
-        mainView.configureEllipsisButtonTarget(target: self, action: #selector(ellipsisButtonTapped))
+        mainView.configureToggleSummaryButtonTarget(target: self, action: #selector(toggleSummaryButtonTapped))
     }
 
     /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드
@@ -58,7 +64,8 @@ final class MainViewController: UIViewController {
         mainView.isHidden = true
     }
 
-    @objc func ellipsisButtonTapped() {
-        mainView.ellipsisButtonTapped()
+    @objc func toggleSummaryButtonTapped() {
+        updateSummary()
+        mainViewModel.toggleExpandedState(for: seriesOrder)
     }
 }
