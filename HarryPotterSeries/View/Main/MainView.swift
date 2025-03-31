@@ -97,12 +97,20 @@ final class MainView: UIView {
 
         chapterView.updateUI(with: book.chapters)
     }
-
+    
+    /// Summary 정보를 업데이트하는 메서드
+    /// - Parameters:
+    ///   - summary: Summary 문자열
+    ///   - buttonTitle: 버튼에 표시될 문자열
     func updateSummary(with summary: String, _ buttonTitle: String) {
         bookSummaryView.updateSummary(with: summary)
         summaryToggleButton.updateTitle(with: buttonTitle)
     }
-
+    
+    /// 접기/더보기 버튼 터치 이벤트 액션 설정 메서드
+    /// - Parameters:
+    ///   - target: 이벤트를 받을 객체
+    ///   - action: 실행될 액션
     func configureToggleSummaryButtonTarget(target: Any, action: Selector) {
         summaryToggleButton.addTarget(target, action: action, for: .touchUpInside)
     }

@@ -43,13 +43,15 @@ final class MainViewController: UIViewController {
 
         updateSummary()
     }
-
+    
+    /// Summary 정보를 업데이트 하는 메서드
     private func updateSummary() {
         guard let (summary, buttonTitle) = mainViewModel.summary(by: seriesOrder) else { return }
 
         mainView.updateSummary(with: summary, buttonTitle)
     }
-
+    
+    /// 버튼 액션 설정을 바인딩하는 메서드
     private func configureBindings() {
         mainView.configureToggleSummaryButtonTarget(target: self, action: #selector(toggleSummaryButtonTapped))
     }
