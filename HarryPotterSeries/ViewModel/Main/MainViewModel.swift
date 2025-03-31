@@ -2,9 +2,9 @@ import Foundation
 
 final class MainViewModel {
     private let bookRepository = DefaultBookRepository()
+    private let expandedStatesRepository = DefaultExpandedStatesRepository()
 
     private var books: [Book] = []
-
     private var expandedStates: [String: Bool] = [:]
 
     /// `DefaultBookRepository`를 통해 책 데이터를 비동기적으로 가져오는 메서드
@@ -19,7 +19,7 @@ final class MainViewModel {
             case .success(let books):
                 self.books = books
 
-                self.initializeExpandedStates()
+                self.fetchExpandedStates()
 
                 completion(.success(()))
             case .failure(let error):
@@ -32,8 +32,18 @@ final class MainViewModel {
         books.first { $0.seriesOrder == seriesOrder }
     }
 
-    private func initializeExpandedStates() {
-        expandedStates = books.reduce(into: [String: Bool]()) { $0[$1.seriesOrder] = false }
+//    private func initializeExpandedStates() {
+//        expandedStates = books.reduce(into: [String: Bool]()) { $0[$1.seriesOrder] = false }
+//    }
+
+    func saveExpandedStates() {
+        expandedStatesRepository.saveExpandedStates(expandedStates)
+    }
+
+    func fetchExpandedStates() {
+        guard let savedExpandedStates = expandedStatesRepository.fetchExpandedStates() else { return }
+
+        expandedStates = savedExpandedStates
     }
 }
 
@@ -41,12 +51,22 @@ extension MainViewModel {
     func summary(by seriesOrder: String) -> (String, String)? {
         guard let book = book(by: seriesOrder) else { return nil }
 
-        let isExpanded = expandedStates[seriesOrder, default: false]
+        let isExpanded = state(for: seriesOrder)
 
         let summary = isExpanded ? book.summary : applyEllipsis(to: book.summary)
         let buttonTitle = summaryToggleButtonTitle(with: isExpanded)
 
         return (summary, buttonTitle)
+    }
+
+    private func state(for seriesOrder: String) -> Bool {
+        guard let isExpanded = expandedStates[seriesOrder] else {
+            expandedStates[seriesOrder] = false
+
+            return false
+        }
+
+        return isExpanded
     }
 
     private func applyEllipsis(to summary: String) -> String {
@@ -59,5 +79,7 @@ extension MainViewModel {
 
     func toggleExpandedState(for seriesOrder: String) {
         expandedStates[seriesOrder]?.toggle()
+
+        saveExpandedStates()
     }
 }

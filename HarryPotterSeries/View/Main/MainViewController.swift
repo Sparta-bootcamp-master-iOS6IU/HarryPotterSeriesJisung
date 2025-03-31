@@ -65,7 +65,8 @@ final class MainViewController: UIViewController {
     }
 
     @objc func toggleSummaryButtonTapped() {
-        updateSummary()
         mainViewModel.toggleExpandedState(for: seriesOrder)
+
+        updateSummary()
     }
 }
