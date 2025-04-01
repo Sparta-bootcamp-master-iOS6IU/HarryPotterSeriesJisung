@@ -1,58 +1,58 @@
 import UIKit
-import SnapKit
 
-class MainViewController: UIViewController {
-    var books: [Book] = []
+final class MainViewController: UIViewController {
+    private let mainView = MainView()
 
-    let bookTitleLabel = UILabel()
-    let seriesOrderButton = UIButton()
+    private var books: [Book] = []
+
+    override func loadView() {
+        view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         fetchBooks()
-
-        configureUI()
     }
 
-    /// 책 데이터를 가져오고 `books` 프로퍼티 업데이트하는 메서드
-    /// 데이터를 가져오는데 실패하면 함수 종료
+    /// BookAPIService를 통해 책 데이터를 비동기적으로 가져오는 메서드
+    /// 성공했을 경우 UI를 업데이트하고, 실패했을 경우 오류 메시지 표시
     private func fetchBooks() {
-        switch BookAPIService.shared.fetchBooks() {
-        case .success(let success):
-            books = success
-        case .failure(let failure):
+        BookAPIService.shared.fetchBooks { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let success):
+                self.books = success
+                DispatchQueue.main.async { self.updateUI() }
+            case .failure(let failure):
+                DispatchQueue.main.async { self.showErrorAlert(error: failure) }
+            }
+        }
+    }
+
+    private func updateUI() {
+        guard let book = books.first else {
             return
         }
+
+        mainView.updateUI(book: book)
     }
 
-    /// UI 설정 함수
-    private func configureUI() {
-        view.backgroundColor = .white
+    /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드
+    /// - Parameter error: 발생한 오류
+    private func showErrorAlert(error: BookAPIError) {
+        let message: String
 
-        bookTitleLabel.text = books[0].title
-        bookTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Layout.FontSize.large))
-        bookTitleLabel.textAlignment = .center
-        bookTitleLabel.numberOfLines = 2
-
-        seriesOrderButton.setTitle(books[0].order, for: .normal)
-        seriesOrderButton.titleLabel?.textAlignment = .center
-        seriesOrderButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(Layout.FontSize.small))
-        seriesOrderButton.layer.cornerRadius = CGFloat(Layout.SeriesOrderButton.radius)
-        seriesOrderButton.backgroundColor = .systemBlue
-
-        [bookTitleLabel, seriesOrderButton]
-            .forEach { view.addSubview($0) }
-
-        bookTitleLabel.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(Layout.Constraints.insetStandard)
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(Layout.Constraints.insetTopSafeArea)
+        switch error {
+        case .invalidPath:
+            message = Alert.Message.invalidPath
+        case .jsonDecodingError:
+            message = Alert.Message.jsonDecodingError
         }
 
-        seriesOrderButton.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(bookTitleLabel.snp.bottom).offset(Layout.Constraints.spacingBetweenTitleAndSeriesOrder)
-            $0.width.height.equalTo(Layout.SeriesOrderButton.size)
-        }
+        let alert = UIAlertController(title: Alert.error, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Alert.confirm, style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

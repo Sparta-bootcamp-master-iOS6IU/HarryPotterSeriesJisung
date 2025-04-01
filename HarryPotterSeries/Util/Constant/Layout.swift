@@ -1,17 +1,20 @@
 enum Layout {
-    enum FontSize {
-        static let large = 24
-        static let small = 16
+    static let verticalStackViewHeightMultiplier = 0.85
+
+    enum Spacing {
+        static let large = 20
+        static let medium = 16
+        static let small = 8
     }
 
-    enum Constraints {
-        static let insetStandard = 20
-        static let spacingBetweenTitleAndSeriesOrder = 16
-        static let insetTopSafeArea = 10
+    enum Offset {
+        static let large = 20
+        static let medium = 16
+        static let small = 10
     }
 
-    enum SeriesOrderButton {
-        static let size = 40
-        static let radius = 20
+    enum Inset {
+        static let large = 20
+        static let tiny = 5
     }
 }
