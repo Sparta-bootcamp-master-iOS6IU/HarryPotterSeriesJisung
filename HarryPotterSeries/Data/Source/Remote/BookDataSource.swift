@@ -10,7 +10,7 @@ struct BookDataSource {
     ///   - `.invalidPath`: JSON 파일을 찾을 수 없을 때 발생
     ///   - `.jsonDecodingError`: JSON 디코딩이 실패할 때 발생
     ///   - `.unknownError`: 그 외 오류 발생
-    func fetchBooks(completion: @escaping (Result<[Attributes], BookError>) -> Void) {
+    func fetchBooks(completion: @escaping (Result<[Attributes], BookDataSourceError>) -> Void) {
         DispatchQueue.global().async {
             guard let path = Bundle.main.path(forResource: DataConstant.name, ofType: DataConstant.type) else {
                 AppLogger.dataSource.error("\(LoggingConstant.DataSource.invalidPath)")
@@ -30,7 +30,7 @@ struct BookDataSource {
             } catch let error {
                 let errorMessage = error.localizedDescription
 
-                func handleError(_ logMessage: String, _ error: BookError) {
+                func handleError(_ logMessage: String, _ error: BookDataSourceError) {
                     AppLogger.dataSource.error("\(logMessage)\(errorMessage)")
                     completion(.failure(error))
                 }

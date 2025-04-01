@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-class ChapterView: UIView {
+final class ChapterView: UIView {
     private let chaptersStackView = UIStackView()
     private let chaptersTitleLabel = UILabel()
 
@@ -48,9 +48,9 @@ class ChapterView: UIView {
 
     func updateUI(with chapters: [String]) {
         chapters.forEach {
-            let chaterLabel = createChapterLabel(from: $0)
+            let chapterLabel = createChapterLabel(from: $0)
 
-            chaptersStackView.addArrangedSubview(chaterLabel)
+            chaptersStackView.addArrangedSubview(chapterLabel)
         }
     }
 }

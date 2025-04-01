@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-final class MainView: UIView {
+final class MainViewController: UIViewController {
     private let bookTitleLabel = BookTitleLabel()
     private let seriesOrderButton = SeriesOrderButton()
     private let scrollView = UIScrollView()
@@ -12,25 +12,54 @@ final class MainView: UIView {
     private let summaryToggleButton = SummaryToggleButton()
     private let chapterView = ChapterView()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private let mainViewModel: MainViewModel
 
-        configureUI()
+    let seriesOrder = "1"
+
+    init(mainViewModel: MainViewModel) {
+        self.mainViewModel = mainViewModel
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        nil
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
         configureUI()
+
+        fetchBooks()
+
+        configureBindings()
+    }
+
+    /// `MainViewModel`을 통해 책 데이터를 비동기적으로 가져오는 메서드
+    /// 성공했을 경우 UI를 업데이트하고, 실패했을 경우 오류 메시지 표시
+    private func fetchBooks() {
+        mainViewModel.fetchBooks { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success:
+                DispatchQueue.main.async { self.updateUI() }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.hideMainView()
+                    self.showErrorAlert(error: error)
+                }
+            }
+        }
     }
 
     private func configureUI() {
-        backgroundColor = .white
+        view.backgroundColor = .white
 
         scrollView.showsVerticalScrollIndicator = false
 
         [bookTitleLabel, seriesOrderButton, scrollView]
-            .forEach { addSubview($0) }
+            .forEach { view.addSubview($0) }
 
         scrollView.addSubview(scrollContentView)
 
@@ -38,8 +67,8 @@ final class MainView: UIView {
             .forEach { scrollContentView.addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
-            $0.top.equalTo(safeAreaLayoutGuide).offset(UIConstant.Offset.small)
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(UIConstant.Offset.small)
         }
 
         seriesOrderButton.snp.makeConstraints {
@@ -50,7 +79,7 @@ final class MainView: UIView {
 
         scrollView.snp.makeConstraints {
             $0.top.equalTo(seriesOrderButton.snp.bottom).offset(UIConstant.Offset.large)
-            $0.leading.trailing.bottom.equalToSuperview()
+            $0.horizontalEdges.bottom.equalToSuperview()
         }
 
         scrollContentView.snp.makeConstraints {
@@ -60,17 +89,17 @@ final class MainView: UIView {
 
         bookDetailView.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(UIConstant.Inset.tiny)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.tiny)
         }
 
         bookDedicationView.snp.makeConstraints {
             $0.top.equalTo(bookDetailView.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
         bookSummaryView.snp.makeConstraints {
             $0.top.equalTo(bookDedicationView.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
         }
 
         summaryToggleButton.snp.makeConstraints {
@@ -80,12 +109,14 @@ final class MainView: UIView {
 
         chapterView.snp.makeConstraints {
             $0.top.equalTo(summaryToggleButton.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
             $0.bottom.equalToSuperview()
         }
     }
 
-    func updateUI(with book: Book) {
+    private func updateUI() {
+        guard let book = mainViewModel.book(by: seriesOrder) else { return }
+
         bookTitleLabel.text = book.title
 
         seriesOrderButton.setTitle(book.seriesOrder, for: .normal)
@@ -96,8 +127,38 @@ final class MainView: UIView {
         bookDedicationView.updateUI(with: book.dedication)
 
         chapterView.updateUI(with: book.chapters)
+
+        updateSummary()
     }
-    
+
+    /// Summary 정보를 업데이트 하는 메서드
+    private func updateSummary() {
+        guard let (summary, buttonTitle) = mainViewModel.summary(by: seriesOrder) else { return }
+
+        updateSummary(with: summary, buttonTitle)
+    }
+
+    /// 버튼 액션 설정을 바인딩하는 메서드
+    private func configureBindings() {
+        configureToggleSummaryButtonTarget(target: self, action: #selector(toggleSummaryButtonTapped))
+    }
+
+    /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드
+    /// - Parameter error: 발생한 오류
+    private func showErrorAlert(error: BookDataSourceError) {
+        AlertManager.showFetchBookError(on: self, error: error)
+    }
+
+    private func hideMainView() {
+        view.isHidden = true
+    }
+
+    @objc func toggleSummaryButtonTapped() {
+        mainViewModel.toggleExpandedState(for: seriesOrder)
+
+        updateSummary()
+    }
+
     /// Summary 정보를 업데이트하는 메서드
     /// - Parameters:
     ///   - summary: Summary 문자열
@@ -106,7 +167,7 @@ final class MainView: UIView {
         bookSummaryView.updateSummary(with: summary)
         summaryToggleButton.updateTitle(with: buttonTitle)
     }
-    
+
     /// 접기/더보기 버튼 터치 이벤트 액션 설정 메서드
     /// - Parameters:
     ///   - target: 이벤트를 받을 객체

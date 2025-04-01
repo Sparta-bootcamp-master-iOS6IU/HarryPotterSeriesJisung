@@ -3,7 +3,7 @@ struct BookMapper {
     /// - Parameter attributes: `Attributes` 배열
     /// - Returns: `Book` 배열
     func mapToDomainModel(_ attributes: [Attributes]) -> [Book] {
-        return attributes.enumerated().map { index, book in
+        attributes.enumerated().map { index, book in
             let seriesOrder = "\(index + 1)"
 
             return Book(

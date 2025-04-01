@@ -5,7 +5,7 @@ struct AlertManager {
     /// - Parameters:
     ///   - viewController: `Alert`을 표시할 `ViewController`
     ///   - error: 발생한 `BookError`
-    static func showFetchBookError(on viewController: UIViewController, error: BookError) {
+    static func showFetchBookError(on viewController: UIViewController, error: BookDataSourceError) {
         let message: String
 
         switch error {

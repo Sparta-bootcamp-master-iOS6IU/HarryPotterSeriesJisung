@@ -107,8 +107,8 @@ final class BookDetailView: UIView {
 
     private func configureConstraints() {
         detailContainerStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.medium)
-            $0.top.bottom.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.medium)
+            $0.verticalEdges.equalToSuperview()
         }
 
         imageView.snp.makeConstraints {

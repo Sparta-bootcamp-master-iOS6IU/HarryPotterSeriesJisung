@@ -1,18 +1,29 @@
 import Foundation
 
 final class MainViewModel {
-    private let bookRepository = DefaultBookRepository()
-    private let expandedStatesRepository = DefaultExpandedStatesRepository()
+    private let fetchBooksUseCase: FetchBooksUseCase
+    private let manageExpandedStatesUseCase: ManageExpandedStatesUseCase
+    private let bookSummaryUseCase: BookSummaryUseCase
 
     private var books: [Book] = []
     private var expandedStates: [String: Bool] = [:]
 
-    /// `DefaultBookRepository`를 통해 책 데이터를 비동기적으로 가져오는 메서드
+    init(
+        fetchBooksUseCase: FetchBooksUseCase,
+        manageExpandedStatesUseCase: ManageExpandedStatesUseCase,
+        bookSummaryUseCase: BookSummaryUseCase
+    ) {
+        self.fetchBooksUseCase = fetchBooksUseCase
+        self.manageExpandedStatesUseCase = manageExpandedStatesUseCase
+        self.bookSummaryUseCase = bookSummaryUseCase
+    }
+
+    /// `DefaultFetchBooksUseCase`를 통해 책 데이터를 비동기적으로 가져오는 메서드
     /// 성공했을 경우 `completion` 클로저를 호출하여 성공을 전달하고, 실패하면 오류를 전달
     ///
     /// - Parameter completion: 작업 결과를 처리하기 위한 클로저
-    func fetchBooks(completion: @escaping (Result<Void, BookError>) -> Void) {
-        bookRepository.fetchBooks { [weak self] result in
+    func fetchBooks(completion: @escaping (Result<Void, BookDataSourceError>) -> Void) {
+        fetchBooksUseCase.fetchBooks { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -34,17 +45,17 @@ final class MainViewModel {
     func book(by seriesOrder: String) -> Book? {
         books.first { $0.seriesOrder == seriesOrder }
     }
-    
-    /// 접기/더보기 상태를 저장하는 메서드
-    func saveExpandedStates() {
-        expandedStatesRepository.saveExpandedStates(expandedStates)
-    }
 
     /// 접기/더보기 상태를 불러오는 메서드
     func fetchExpandedStates() {
-        guard let savedExpandedStates = expandedStatesRepository.fetchExpandedStates() else { return }
+        guard let savedExpandedStates = manageExpandedStatesUseCase.fetchExpandedStates() else { return }
 
         expandedStates = savedExpandedStates
+    }
+
+    /// 접기/더보기 상태를 저장하는 메서드
+    func saveExpandedStates() {
+        manageExpandedStatesUseCase.saveExpandedStates(expandedStates)
     }
 }
 
@@ -57,12 +68,9 @@ extension MainViewModel {
 
         let isExpanded = state(for: seriesOrder)
 
-        let summary = isExpanded ? book.summary : applyEllipsis(to: book.summary)
-        let buttonTitle = summaryToggleButtonTitle(with: isExpanded)
-
-        return (summary, buttonTitle)
+        return bookSummaryUseCase.summary(for: book, isExpanded: isExpanded)
     }
-    
+
     /// 선택된 책의 접기/더보기 상태를 반환하는 메서드
     /// - Parameter seriesOrder: `Book`의 시리즈 순서`
     /// - Returns: 접기/더보기 상태 Boolean 값. 기본값은 `false`
@@ -75,21 +83,7 @@ extension MainViewModel {
 
         return isExpanded
     }
-    
-    /// Summary를 일정 길이까지만 표시하고 말줄임표(...)를 추가하는 메서드
-    /// - Parameter summary: 원본 Summary
-    /// - Returns: 말줄임표가 추가된 Summary
-    private func applyEllipsis(to summary: String) -> String {
-        String(summary.prefix(UIConstant.Summary.ellipsisThreshold)) + UIConstant.Summary.ellipsis
-    }
-    
-    /// 접기/더보기 상태에 따라 버튼 타이틀 문자열을 반환하는 메서드
-    /// - Parameter expandedState: 접기/더보기 상태 Boolean
-    /// - Returns: `접기` 또는 `더보기` 문자열
-    private func summaryToggleButtonTitle(with expandedState: Bool) -> String {
-        expandedState ? UIConstant.EllipsisButton.collapse : UIConstant.EllipsisButton.expand
-    }
-    
+
     /// 선택된 책의 접기/더보기 상태를 변환하는 메서드
     /// - Parameter seriesOrder: `Book`의 시리즈 순서
     func toggleExpandedState(for seriesOrder: String) {
