@@ -28,33 +28,11 @@ final class MainViewController: UIViewController {
 
         configureUI()
 
-        mainViewModel.onBookSelected = { [weak self] book in
-            DispatchQueue.main.async {
-                self?.updateBook(with: book)
-            }
-        }
+        configureViewModelBindings()
 
-        fetchBooks()
+        mainViewModel.fetchBooks()
 
-        configureBindings()
-    }
-
-    /// `MainViewModel`을 통해 책 데이터를 비동기적으로 가져오는 메서드
-    /// 성공했을 경우 UI를 업데이트하고, 실패했을 경우 오류 메시지 표시
-    private func fetchBooks() {
-        mainViewModel.fetchBooks { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success:
-                DispatchQueue.main.async { self.updateUI() }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.hideMainView()
-                    self.showErrorAlert(error: error)
-                }
-            }
-        }
+        configurButtoneBindings()
     }
 
     private func configureUI() {
@@ -118,14 +96,12 @@ final class MainViewController: UIViewController {
     }
 
     private func updateUI() {
-        guard let book = mainViewModel.selectedBook else { return }
-
         seriesOrderButtonView.updateUI(with: mainViewModel.books.count)
 
-        updateBook(with: book)
+        updateBook()
     }
 
-    private func updateBook(with book: Book?) {
+    private func updateBook() {
         guard let book = mainViewModel.selectedBook else { return }
 
         bookTitleLabel.text = book.title
@@ -153,9 +129,33 @@ final class MainViewController: UIViewController {
         summaryToggleButton.updateTitle(with: buttonTitle)
     }
 
+    private func configureViewModelBindings() {
+        mainViewModel.onBooksUpdated = { [weak self] in
+            DispatchQueue.main.async {
+                self?.updateUI()
+            }
+        }
+
+        mainViewModel.onBookSelected = { [weak self] in
+            DispatchQueue.main.async {
+                self?.updateBook()
+            }
+        }
+
+        mainViewModel.onFetchError = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showErrorAlert(error: error)
+            }
+        }
+    }
+
     /// 버튼 액션 설정을 바인딩하는 메서드
-    private func configureBindings() {
-        configureToggleSummaryButtonTarget(target: self, action: #selector(toggleSummaryButtonTapped))
+    private func configurButtoneBindings() {
+        summaryToggleButton.onButtonTapped = { [weak self] in
+            self?.mainViewModel.toggleExpandedState()
+
+            self?.updateSummary()
+        }
 
         seriesOrderButtonView.onButtonTapped = { [weak self] seriesOrder in
             self?.mainViewModel.selectBook(at: seriesOrder)
@@ -166,23 +166,5 @@ final class MainViewController: UIViewController {
     /// - Parameter error: 발생한 오류
     private func showErrorAlert(error: BookDataSourceError) {
         AlertManager.showFetchBookError(on: self, error: error)
-    }
-
-    private func hideMainView() {
-        view.isHidden = true
-    }
-
-    /// 접기/더보기 버튼 터치 이벤트 액션 설정 메서드
-    /// - Parameters:
-    ///   - target: 이벤트를 받을 객체
-    ///   - action: 실행될 액션
-    func configureToggleSummaryButtonTarget(target: Any, action: Selector) {
-        summaryToggleButton.addTarget(target, action: action, for: .touchUpInside)
-    }
-
-    @objc func toggleSummaryButtonTapped() {
-        mainViewModel.toggleExpandedState()
-
-        updateSummary()
     }
 }

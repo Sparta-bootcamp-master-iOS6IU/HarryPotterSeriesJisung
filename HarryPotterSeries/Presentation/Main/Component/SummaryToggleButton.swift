@@ -1,6 +1,8 @@
 import UIKit
 
 final class SummaryToggleButton: UIButton {
+    var onButtonTapped: (() -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -20,5 +22,13 @@ final class SummaryToggleButton: UIButton {
 
     func updateTitle(with title: String) {
         setTitle(title, for: .normal)
+    }
+
+    private func configureBindings() {
+        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    }
+
+    @objc private func buttonTapped() {
+        onButtonTapped?()
     }
 }

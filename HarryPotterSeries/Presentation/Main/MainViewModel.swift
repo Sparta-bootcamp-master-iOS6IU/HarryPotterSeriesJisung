@@ -5,12 +5,23 @@ final class MainViewModel {
     private let manageExpandedStatesUseCase: ManageExpandedStatesUseCase
     private let bookSummaryUseCase: BookSummaryUseCase
 
-    private(set) var books: [Book] = []
-    private(set) var selectedBook: Book?
+    private(set) var books: [Book] = [] {
+        didSet {
+            onBooksUpdated?()
+        }
+    }
+
+    private(set) var selectedBook: Book? {
+        didSet {
+            onBookSelected?()
+        }
+    }
 
     private var expandedStates: [String: Bool] = [:]
 
-    var onBookSelected: ((Book?) -> Void)?
+    var onBooksUpdated: (() -> Void)?
+    var onBookSelected: (() -> Void)?
+    var onFetchError: ((BookDataSourceError) -> Void)?
 
     init(
         fetchBooksUseCase: FetchBooksUseCase,
@@ -26,7 +37,7 @@ final class MainViewModel {
     /// 성공했을 경우 `completion` 클로저를 호출하여 성공을 전달하고, 실패하면 오류를 전달
     ///
     /// - Parameter completion: 작업 결과를 처리하기 위한 클로저
-    func fetchBooks(completion: @escaping (Result<Void, BookDataSourceError>) -> Void) {
+    func fetchBooks() {
         fetchBooksUseCase.fetchBooks { [weak self] result in
             guard let self = self else { return }
 
@@ -39,10 +50,8 @@ final class MainViewModel {
                 }
 
                 self.fetchExpandedStates()
-
-                completion(.success(()))
             case .failure(let error):
-                completion(.failure(error))
+                self.onFetchError?(error)
             }
         }
     }
@@ -56,7 +65,7 @@ final class MainViewModel {
         }
 
         selectedBook = book
-        onBookSelected?(selectedBook)
+        onBookSelected?()
     }
 
     /// 접기/더보기 상태를 불러오는 메서드
@@ -104,9 +113,7 @@ extension MainViewModel {
     /// 선택된 책의 접기/더보기 상태를 변환하는 메서드
     /// - Parameter seriesOrder: `Book`의 시리즈 순서
     func toggleExpandedState() {
-        guard let seriesOrder = selectedBook?.seriesOrder else {
-            return
-        }
+        guard let seriesOrder = selectedBook?.seriesOrder else { return }
 
         expandedStates[seriesOrder]?.toggle()
 
