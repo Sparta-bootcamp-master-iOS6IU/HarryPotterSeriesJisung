@@ -47,10 +47,16 @@ final class ChapterView: UIView {
     }
 
     func updateUI(with chapters: [String]) {
+        deleteAllSubvies()
+
         chapters.forEach {
             let chapterLabel = createChapterLabel(from: $0)
 
             chaptersStackView.addArrangedSubview(chapterLabel)
         }
+    }
+
+    func deleteAllSubvies() {
+        chaptersStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     }
 }
