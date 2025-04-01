@@ -4,6 +4,8 @@ import SnapKit
 final class SeriesOrderButtonView: UIView {
     private let buttonStackView = UIStackView()
 
+    var onButtonTapped: ((String) -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -29,12 +31,24 @@ final class SeriesOrderButtonView: UIView {
     }
 
     func updateUI(with booksCount: Int) {
-        for order in 1...booksCount {
+        for seriesOrder in 1...booksCount {
             let seriesOrderButton = SeriesOrderButton()
 
-            buttonStackView.addArrangedSubview(seriesOrderButton)
+            seriesOrderButton.updateTitle(with: "\(seriesOrder)")
 
-            seriesOrderButton.updateTitle(with: "\(order)")
+            seriesOrderButton.onButtonTapped = { [weak self] in
+                self?.onButtonTapped?("\(seriesOrder)")
+            }
+
+            buttonStackView.addArrangedSubview(seriesOrderButton)
+        }
+    }
+
+    func updateSeriesOrderButton(by seriesOrder: String) {
+        buttonStackView.arrangedSubviews.enumerated().forEach { index, subview in
+            if let button = subview as? SeriesOrderButton {
+                button.isSelected = "\(index + 1)" == seriesOrder
+            }
         }
     }
 }

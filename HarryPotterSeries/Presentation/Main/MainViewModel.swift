@@ -5,8 +5,12 @@ final class MainViewModel {
     private let manageExpandedStatesUseCase: ManageExpandedStatesUseCase
     private let bookSummaryUseCase: BookSummaryUseCase
 
-    private var books: [Book] = []
+    private(set) var books: [Book] = []
+    private(set) var selectedBook: Book?
+
     private var expandedStates: [String: Bool] = [:]
+
+    var onBookSelected: ((Book?) -> Void)?
 
     init(
         fetchBooksUseCase: FetchBooksUseCase,
@@ -28,7 +32,11 @@ final class MainViewModel {
 
             switch result {
             case .success(let books):
-                self.books = books
+                self.books = books.sorted { $0.seriesOrder < $1.seriesOrder }
+
+                if self.selectedBook == nil, let book = self.books.first {
+                    self.selectedBook = book
+                }
 
                 self.fetchExpandedStates()
 
@@ -42,8 +50,13 @@ final class MainViewModel {
     /// 선택된 `Book` 객체를 반환하는 메서드
     /// - Parameter seriesOrder: `Book`의 시리즈 순서 문자열
     /// - Returns: 선택된 `Book`
-    func book(by seriesOrder: String) -> Book? {
-        books.first { $0.seriesOrder == seriesOrder }
+    func selectBook(at seriesOrder: String) {
+        guard let book = books.first(where: { $0.seriesOrder == seriesOrder }) else {
+            return
+        }
+
+        selectedBook = book
+        onBookSelected?(selectedBook)
     }
 
     /// 접기/더보기 상태를 불러오는 메서드
@@ -57,16 +70,20 @@ final class MainViewModel {
     func saveExpandedStates() {
         manageExpandedStatesUseCase.saveExpandedStates(expandedStates)
     }
+
+    func isSelectedButton(for seriesOrder: String) -> Bool {
+        selectedBook?.seriesOrder == seriesOrder
+    }
 }
 
 extension MainViewModel {
     /// 선택된 책의 Summary 정보를 반환하는 메서드
     /// - Parameter seriesOrder: `Book`의 시리즈 순서 문자열
     /// - Returns: (Summary 문자열, 버튼 타이틀 문자열) 튜플
-    func summary(by seriesOrder: String) -> (String, String)? {
-        guard let book = book(by: seriesOrder) else { return nil }
+    func summary() -> (String, String)? {
+        guard let book = selectedBook else { return nil }
 
-        let isExpanded = state(for: seriesOrder)
+        let isExpanded = state(for: book.seriesOrder)
 
         return bookSummaryUseCase.summary(for: book, isExpanded: isExpanded)
     }
@@ -86,7 +103,11 @@ extension MainViewModel {
 
     /// 선택된 책의 접기/더보기 상태를 변환하는 메서드
     /// - Parameter seriesOrder: `Book`의 시리즈 순서
-    func toggleExpandedState(for seriesOrder: String) {
+    func toggleExpandedState() {
+        guard let seriesOrder = selectedBook?.seriesOrder else {
+            return
+        }
+
         expandedStates[seriesOrder]?.toggle()
 
         saveExpandedStates()

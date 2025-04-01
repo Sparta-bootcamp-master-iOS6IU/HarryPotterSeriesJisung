@@ -14,8 +14,6 @@ final class MainViewController: UIViewController {
 
     private let mainViewModel: MainViewModel
 
-    let seriesOrder = "1"
-
     init(mainViewModel: MainViewModel) {
         self.mainViewModel = mainViewModel
         super.init(nibName: nil, bundle: nil)
@@ -29,6 +27,12 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
 
         configureUI()
+
+        mainViewModel.onBookSelected = { [weak self] book in
+            DispatchQueue.main.async {
+                self?.updateBook(with: book)
+            }
+        }
 
         fetchBooks()
 
@@ -114,11 +118,17 @@ final class MainViewController: UIViewController {
     }
 
     private func updateUI() {
-        guard let book = mainViewModel.book(by: seriesOrder) else { return }
+        guard let book = mainViewModel.selectedBook else { return }
+
+        seriesOrderButtonView.updateUI(with: mainViewModel.books.count)
+
+        updateBook(with: book)
+    }
+
+    private func updateBook(with book: Book?) {
+        guard let book = mainViewModel.selectedBook else { return }
 
         bookTitleLabel.text = book.title
-
-        seriesOrderButtonView.updateUI(with: 7)
 
         bookDetailView.updateUI(with: book)
 
@@ -127,18 +137,29 @@ final class MainViewController: UIViewController {
         chapterView.updateUI(with: book.chapters)
 
         updateSummary()
+
+        updateSeriesOrderButton(by: book.seriesOrder)
+    }
+
+    private func updateSeriesOrderButton(by seriesOrder: String) {
+        seriesOrderButtonView.updateSeriesOrderButton(by: seriesOrder)
     }
 
     /// Summary 정보를 업데이트 하는 메서드
     private func updateSummary() {
-        guard let (summary, buttonTitle) = mainViewModel.summary(by: seriesOrder) else { return }
+        guard let (summary, buttonTitle) = mainViewModel.summary() else { return }
 
-        updateSummary(with: summary, buttonTitle)
+        bookSummaryView.updateSummary(with: summary)
+        summaryToggleButton.updateTitle(with: buttonTitle)
     }
 
     /// 버튼 액션 설정을 바인딩하는 메서드
     private func configureBindings() {
         configureToggleSummaryButtonTarget(target: self, action: #selector(toggleSummaryButtonTapped))
+
+        seriesOrderButtonView.onButtonTapped = { [weak self] seriesOrder in
+            self?.mainViewModel.selectBook(at: seriesOrder)
+        }
     }
 
     /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드
@@ -151,15 +172,6 @@ final class MainViewController: UIViewController {
         view.isHidden = true
     }
 
-    /// Summary 정보를 업데이트하는 메서드
-    /// - Parameters:
-    ///   - summary: Summary 문자열
-    ///   - buttonTitle: 버튼에 표시될 문자열
-    func updateSummary(with summary: String, _ buttonTitle: String) {
-        bookSummaryView.updateSummary(with: summary)
-        summaryToggleButton.updateTitle(with: buttonTitle)
-    }
-
     /// 접기/더보기 버튼 터치 이벤트 액션 설정 메서드
     /// - Parameters:
     ///   - target: 이벤트를 받을 객체
@@ -169,7 +181,7 @@ final class MainViewController: UIViewController {
     }
 
     @objc func toggleSummaryButtonTapped() {
-        mainViewModel.toggleExpandedState(for: seriesOrder)
+        mainViewModel.toggleExpandedState()
 
         updateSummary()
     }
