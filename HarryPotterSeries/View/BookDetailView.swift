@@ -2,8 +2,8 @@ import UIKit
 import SnapKit
 
 final class BookDetailView: UIView {
-    private let mainStackView = UIStackView()
-    private let verticalStackView = UIStackView()
+    private let detailContainerStackView = UIStackView()
+    private let detailStackView = UIStackView()
     private let authorStackView = UIStackView()
     private let releasedStackView = UIStackView()
     private let pagesStackView = UIStackView()
@@ -48,14 +48,14 @@ final class BookDetailView: UIView {
             .forEach { pagesStackView.addArrangedSubview($0) }
 
         [titleLabel, authorStackView, releasedStackView, pagesStackView]
-            .forEach { verticalStackView.addArrangedSubview($0) }
+            .forEach { detailStackView.addArrangedSubview($0) }
 
-        [imageView, verticalStackView]
-            .forEach { mainStackView.addArrangedSubview($0) }
+        [imageView, detailStackView]
+            .forEach { detailContainerStackView.addArrangedSubview($0) }
 
-        addSubview(mainStackView)
+        addSubview(detailContainerStackView)
 
-        setConstraints()
+        configureConstraints()
     }
 
     private func configureLabels() {
@@ -63,18 +63,21 @@ final class BookDetailView: UIView {
         titleLabel.textColor = .black
         titleLabel.numberOfLines = Component.DefaultLabel.numberOfLines
 
+        authorTitleLabel.text = StringKey.author
         authorTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.small))
         authorTitleLabel.textColor = .black
 
         authorLabel.font = .systemFont(ofSize: CGFloat(Font.Size.medium))
         authorLabel.textColor = .darkGray
 
+        releasedTitleLabel.text = StringKey.released
         releasedTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.tiny))
         releasedTitleLabel.textColor = .black
 
         releasedLabel.font = .systemFont(ofSize: CGFloat(Font.Size.tiny))
         releasedLabel.textColor = .gray
 
+        pagesTitleLabel.text = StringKey.pages
         pagesTitleLabel.font = .boldSystemFont(ofSize: CGFloat(Font.Size.tiny))
         pagesTitleLabel.textColor = .black
 
@@ -83,13 +86,13 @@ final class BookDetailView: UIView {
     }
 
     private func configureStackViews() {
-        mainStackView.axis = .horizontal
-        mainStackView.alignment = .top
-        mainStackView.distribution = .equalSpacing
+        detailContainerStackView.axis = .horizontal
+        detailContainerStackView.alignment = .top
+        detailContainerStackView.distribution = .equalSpacing
 
-        verticalStackView.axis = .vertical
-        verticalStackView.alignment = .leading
-        verticalStackView.distribution = .equalSpacing
+        detailStackView.axis = .vertical
+        detailStackView.alignment = .leading
+        detailStackView.distribution = .equalSpacing
 
         configureHorizontalStackview(authorStackView)
         configureHorizontalStackview(releasedStackView)
@@ -102,9 +105,10 @@ final class BookDetailView: UIView {
         stackView.alignment = .center
     }
 
-    private func setConstraints() {
-        mainStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+    private func configureConstraints() {
+        detailContainerStackView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.medium)
+            $0.top.bottom.equalToSuperview()
         }
 
         imageView.snp.makeConstraints {
@@ -112,7 +116,7 @@ final class BookDetailView: UIView {
             $0.height.equalTo(imageView.snp.width).multipliedBy(Component.BookImage.aspectRatio)
         }
 
-        verticalStackView.snp.makeConstraints {
+        detailStackView.snp.makeConstraints {
             $0.height.equalToSuperview().multipliedBy(Layout.verticalStackViewHeightMultiplier)
             $0.leading.equalTo(imageView.snp.trailing).offset(Layout.Offset.large)
         }
@@ -124,16 +128,9 @@ final class BookDetailView: UIView {
 
     func updateUI(book: Book) {
         imageView.image = UIImage(named: book.image)
-
         titleLabel.text = book.title
-
-        authorTitleLabel.text = StringKey.author
         authorLabel.text = book.author
-
-        releasedTitleLabel.text = StringKey.released
         releasedLabel.text = book.formattedReleasedDate
-
-        pagesTitleLabel.text = StringKey.pages
         pagesLabel.text = "\(book.pages)"
     }
 }

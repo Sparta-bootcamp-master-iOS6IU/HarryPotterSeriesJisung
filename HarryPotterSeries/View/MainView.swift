@@ -5,6 +5,8 @@ final class MainView: UIView {
     private let bookTitleLabel = BookTitleLabel()
     private let seriesOrderButton = SeriesOrderButton()
     private let bookDetailView = BookDetailView()
+    private let bookDedicationView = BookDedicationView()
+    private let bookSummaryView = BookSummaryView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,7 +23,7 @@ final class MainView: UIView {
     private func configureUI() {
         backgroundColor = .white
 
-        [bookTitleLabel, seriesOrderButton, bookDetailView]
+        [bookTitleLabel, seriesOrderButton, bookDetailView, bookDedicationView, bookSummaryView]
             .forEach { addSubview($0) }
 
         bookTitleLabel.snp.makeConstraints {
@@ -39,6 +41,16 @@ final class MainView: UIView {
             $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Layout.Inset.tiny)
             $0.top.equalTo(seriesOrderButton.snp.bottom).offset(Layout.Offset.large)
         }
+
+        bookDedicationView.snp.makeConstraints {
+            $0.top.equalTo(bookDetailView.snp.bottom).offset(Layout.Offset.extraLarge)
+            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+        }
+
+        bookSummaryView.snp.makeConstraints {
+            $0.top.equalTo(bookDedicationView.snp.bottom).offset(Layout.Offset.extraLarge)
+            $0.leading.trailing.equalToSuperview().inset(Layout.Inset.large)
+        }
     }
 
     func updateUI(book: Book) {
@@ -48,5 +60,9 @@ final class MainView: UIView {
         seriesOrderButton.isHidden = false
 
         bookDetailView.updateUI(book: book)
+
+        bookDedicationView.updateUI(with: book.dedication)
+
+        bookSummaryView.updateUI(with: book.summary)
     }
 }

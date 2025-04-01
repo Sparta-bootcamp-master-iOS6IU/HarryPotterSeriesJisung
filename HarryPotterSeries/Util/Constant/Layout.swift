@@ -8,6 +8,7 @@ enum Layout {
     }
 
     enum Offset {
+        static let extraLarge = 24
         static let large = 20
         static let medium = 16
         static let small = 10
@@ -15,6 +16,7 @@ enum Layout {
 
     enum Inset {
         static let large = 20
+        static let medium = 15
         static let tiny = 5
     }
 }
