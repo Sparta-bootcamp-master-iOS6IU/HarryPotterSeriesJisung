@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 final class SeriesOrderButton: UIButton {
     override init(frame: CGRect) {
@@ -16,8 +17,15 @@ final class SeriesOrderButton: UIButton {
     private func configureUI() {
         titleLabel?.textAlignment = .center
         titleLabel?.font = UIFont.systemFont(ofSize: UIConstant.FontSize.small)
-        layer.cornerRadius = CGFloat(UIConstant.SeriesOrderButton.radius)
+        layer.cornerRadius = UIConstant.SeriesOrderButton.radius
         backgroundColor = .systemBlue
-        isHidden = true
+
+        snp.makeConstraints {
+            $0.width.height.equalTo(UIConstant.SeriesOrderButton.size)
+        }
+    }
+
+    func updateTitle(with seriesOrder: String) {
+        setTitle(seriesOrder, for: .normal)
     }
 }

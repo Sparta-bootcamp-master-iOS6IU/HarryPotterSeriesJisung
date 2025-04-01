@@ -3,7 +3,7 @@ import SnapKit
 
 final class MainViewController: UIViewController {
     private let bookTitleLabel = BookTitleLabel()
-    private let seriesOrderButton = SeriesOrderButton()
+    private let seriesOrderButtonView = SeriesOrderButtonView()
     private let scrollView = UIScrollView()
     private let scrollContentView = UIView()
     private let bookDetailView = BookDetailView()
@@ -58,7 +58,7 @@ final class MainViewController: UIViewController {
 
         scrollView.showsVerticalScrollIndicator = false
 
-        [bookTitleLabel, seriesOrderButton, scrollView]
+        [bookTitleLabel, seriesOrderButtonView, scrollView]
             .forEach { view.addSubview($0) }
 
         scrollView.addSubview(scrollContentView)
@@ -71,14 +71,13 @@ final class MainViewController: UIViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(UIConstant.Offset.small)
         }
 
-        seriesOrderButton.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+        seriesOrderButtonView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.extraLarge)
             $0.top.equalTo(bookTitleLabel.snp.bottom).offset(UIConstant.Offset.medium)
-            $0.width.height.equalTo(UIConstant.SeriesOrderButton.size)
         }
 
         scrollView.snp.makeConstraints {
-            $0.top.equalTo(seriesOrderButton.snp.bottom).offset(UIConstant.Offset.large)
+            $0.top.equalTo(seriesOrderButtonView.snp.bottom).offset(UIConstant.Offset.large)
             $0.horizontalEdges.bottom.equalToSuperview()
         }
 
@@ -119,8 +118,7 @@ final class MainViewController: UIViewController {
 
         bookTitleLabel.text = book.title
 
-        seriesOrderButton.setTitle(book.seriesOrder, for: .normal)
-        seriesOrderButton.isHidden = false
+        seriesOrderButtonView.updateUI(with: 7)
 
         bookDetailView.updateUI(with: book)
 
@@ -153,12 +151,6 @@ final class MainViewController: UIViewController {
         view.isHidden = true
     }
 
-    @objc func toggleSummaryButtonTapped() {
-        mainViewModel.toggleExpandedState(for: seriesOrder)
-
-        updateSummary()
-    }
-
     /// Summary 정보를 업데이트하는 메서드
     /// - Parameters:
     ///   - summary: Summary 문자열
@@ -174,5 +166,11 @@ final class MainViewController: UIViewController {
     ///   - action: 실행될 액션
     func configureToggleSummaryButtonTarget(target: Any, action: Selector) {
         summaryToggleButton.addTarget(target, action: action, for: .touchUpInside)
+    }
+
+    @objc func toggleSummaryButtonTapped() {
+        mainViewModel.toggleExpandedState(for: seriesOrder)
+
+        updateSummary()
     }
 }
