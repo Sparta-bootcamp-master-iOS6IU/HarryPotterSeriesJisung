@@ -19,11 +19,7 @@ final class SeriesOrderButton: UIButton {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        configureUI()
-
-        configureBindings()
+        nil
     }
 
     private func configureUI() {

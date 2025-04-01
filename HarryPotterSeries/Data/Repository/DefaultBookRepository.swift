@@ -1,5 +1,3 @@
-import Foundation
-
 struct DefaultBookRepository: BookRepository {
     private let bookDataSource: BookDataSource
     private let bookMapper: BookMapper

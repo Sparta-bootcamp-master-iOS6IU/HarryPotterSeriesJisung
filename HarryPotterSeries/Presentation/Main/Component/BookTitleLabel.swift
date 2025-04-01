@@ -8,9 +8,7 @@ final class BookTitleLabel: UILabel {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        configureUI()
+        nil
     }
 
     private func configureUI() {

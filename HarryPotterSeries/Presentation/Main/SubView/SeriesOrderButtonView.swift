@@ -13,9 +13,7 @@ final class SeriesOrderButtonView: UIView {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        configureUI()
+        nil
     }
 
     private func configureUI() {

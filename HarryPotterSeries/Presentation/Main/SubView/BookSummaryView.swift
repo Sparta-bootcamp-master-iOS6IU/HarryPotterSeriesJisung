@@ -13,9 +13,7 @@ final class BookSummaryView: UIView {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        configureUI()
+        nil
     }
 
     private func configureUI() {
