@@ -219,7 +219,7 @@ final class MainViewController: UIViewController {
         guard let (summary, buttonTitle) = mainViewModel.summary() else { return }
 
         bookSummaryView.updateSummary(with: summary)
-        summaryToggleButton.updateTitle(with: buttonTitle)
+        summaryToggleButton.updateButton(with: buttonTitle)
     }
 
     /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드

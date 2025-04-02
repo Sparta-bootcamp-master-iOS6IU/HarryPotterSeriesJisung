@@ -100,7 +100,7 @@ final class MainViewModel {
     /// 선택된 책의 Summary 정보를 반환하는 메서드
     ///
     /// - Returns: (Summary 문자열, 버튼 타이틀 문자열) 튜플
-    func summary() -> (String, String)? {
+    func summary() -> (String, String?)? {
         guard let book = selectedBook else { return nil }
 
         let isExpanded = state(for: book.seriesOrder)
