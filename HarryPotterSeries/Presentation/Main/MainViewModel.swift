@@ -69,7 +69,6 @@ final class MainViewModel {
         }
 
         selectedBook = book
-        onBookSelected?()
     }
 
     // MARK: - Expand/Collapse Management
