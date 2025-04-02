@@ -36,7 +36,7 @@ final class MainViewController: UIViewController {
             return
         }
 
-        mainView.updateUI(book: book)
+        mainView.updateUI(with: book)
     }
 
     /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드
