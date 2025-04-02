@@ -68,7 +68,7 @@ final class MainViewController: UIViewController {
         }
 
         seriesOrderButtonView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.extraLarge)
+            $0.centerX.equalToSuperview()
             $0.top.equalTo(bookTitleLabel.snp.bottom).offset(UIConstant.Offset.medium)
         }
 
@@ -89,22 +89,22 @@ final class MainViewController: UIViewController {
 
         bookDedicationView.snp.makeConstraints {
             $0.top.equalTo(bookDetailView.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
         }
 
         bookSummaryView.snp.makeConstraints {
             $0.top.equalTo(bookDedicationView.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
         }
 
         summaryToggleButton.snp.makeConstraints {
             $0.top.equalTo(bookSummaryView.snp.bottom)
-            $0.trailing.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
         }
 
         chapterView.snp.makeConstraints {
             $0.top.equalTo(summaryToggleButton.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
             $0.bottom.equalToSuperview()
         }
     }
