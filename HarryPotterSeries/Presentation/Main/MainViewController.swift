@@ -216,7 +216,7 @@ final class MainViewController: UIViewController {
 
     /// Summary 정보를 업데이트 하는 메서드
     private func updateSummary() {
-        guard let (summary, buttonTitle) = mainViewModel.summary() else { return }
+        guard let (summary, buttonTitle) = mainViewModel.summaryWithTitle() else { return }
 
         bookSummaryView.updateSummary(with: summary)
         summaryToggleButton.updateButton(with: buttonTitle)

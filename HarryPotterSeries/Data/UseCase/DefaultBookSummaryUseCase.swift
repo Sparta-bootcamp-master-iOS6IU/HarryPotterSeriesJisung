@@ -5,7 +5,7 @@ struct DefaultBookSummaryUseCase: BookSummaryUseCase {
     ///   - summary: 요약 문자열
     ///   - isExpanded: 접기/더보기 상태를 나타내는 `Bool` 값`
     /// - Returns: `(summary: String, buttonTitle: String)` 튜플
-    func summary(for summary: String, isExpanded: Bool) -> (String, String?) {
+    func summaryWithTitle(for summary: String, isExpanded: Bool) -> (String, String?) {
         let isEllipsisNeeded = needsEllipsis(in: summary)
         if isEllipsisNeeded {
             let summary = isExpanded ? summary : applyEllipsis(to: summary)
@@ -14,7 +14,7 @@ struct DefaultBookSummaryUseCase: BookSummaryUseCase {
             return (summary, buttonTitle)
         }
 
-        return (summary, nil)
+        return (summary, .none)
     }
 
     /// Summary를 일정 길이까지만 표시하고 말줄임표(...)를 추가하는 메서드
