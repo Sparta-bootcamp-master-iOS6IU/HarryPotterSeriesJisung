@@ -103,7 +103,7 @@ final class MainViewModel {
         let isExpanded = state(for: seriesOrder)
         let (summary, title) = bookSummaryUseCase.summaryWithTitle(for: book.summary, isExpanded: isExpanded)
 
-        if let title = title {
+        if title != .none {
             expandedStates[seriesOrder] = isExpanded
         }
 

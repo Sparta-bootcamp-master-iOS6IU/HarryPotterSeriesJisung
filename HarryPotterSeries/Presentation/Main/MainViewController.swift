@@ -31,7 +31,7 @@ final class MainViewController: UIViewController {
 
         configureViewModelBindings()
 
-        configurButtoneBindings()
+        configurButtonBindings()
 
         mainViewModel.fetchBooks()
     }
@@ -134,7 +134,7 @@ final class MainViewController: UIViewController {
     }
 
     /// 버튼 액션 설정 메서드
-    private func configurButtoneBindings() {
+    private func configurButtonBindings() {
         summaryToggleButton.onButtonTapped = { [weak self] in
             self?.mainViewModel.toggleExpandedState()
 
