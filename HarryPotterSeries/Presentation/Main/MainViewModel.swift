@@ -1,5 +1,6 @@
 import Foundation
 
+/// 책 데이터를 관리하고, 선택된 책의 상태를 추적하며, UI와의 데이터 바인딩 담당
 final class MainViewModel {
     private let fetchBooksUseCase: FetchBooksUseCase
     private let manageExpandedStatesUseCase: ManageExpandedStatesUseCase
@@ -33,32 +34,35 @@ final class MainViewModel {
         self.bookSummaryUseCase = bookSummaryUseCase
     }
 
-    /// `DefaultFetchBooksUseCase`를 통해 책 데이터를 비동기적으로 가져오는 메서드
-    /// 성공했을 경우 `completion` 클로저를 호출하여 성공을 전달하고, 실패하면 오류를 전달
+    // MARK: Data Fetching
+
+    /// 책 데이터를 가져오는 메서드
     ///
-    /// - Parameter completion: 작업 결과를 처리하기 위한 클로저
+    /// 성공하면 `books` 프로퍼티를 업데이트하고, 첫 번째 책 선택
+    ///
+    /// 실패하면 `onFetchError` 클로저 호출
     func fetchBooks() {
         fetchBooksUseCase.fetchBooks { [weak self] result in
-            guard let self = self else { return }
-
             switch result {
             case .success(let books):
-                self.books = books.sorted { $0.seriesOrder < $1.seriesOrder }
+                self?.books = books.sorted { $0.seriesOrder < $1.seriesOrder }
 
-                if self.selectedBook == nil, let book = self.books.first {
-                    self.selectedBook = book
+                if self?.selectedBook == nil, let book = self?.books.first {
+                    self?.selectedBook = book
                 }
 
-                self.fetchExpandedStates()
+                self?.fetchExpandedStates()
             case .failure(let error):
-                self.onFetchError?(error)
+                self?.onFetchError?(error)
             }
         }
     }
 
-    /// 선택된 `Book` 객체를 반환하는 메서드
-    /// - Parameter seriesOrder: `Book`의 시리즈 순서 문자열
-    /// - Returns: 선택된 `Book`
+    // MARK: Book
+
+    /// 특정 시리즈 순서의 책을 선택하는 메서드
+    ///
+    /// - Parameter seriesOrder: 시리즈 순서 문자열
     func selectBook(at seriesOrder: String) {
         guard let book = books.first(where: { $0.seriesOrder == seriesOrder }) else {
             return
@@ -68,38 +72,12 @@ final class MainViewModel {
         onBookSelected?()
     }
 
-    /// 접기/더보기 상태를 불러오는 메서드
-    func fetchExpandedStates() {
-        guard let savedExpandedStates = manageExpandedStatesUseCase.fetchExpandedStates() else { return }
-
-        expandedStates = savedExpandedStates
-    }
-
-    /// 접기/더보기 상태를 저장하는 메서드
-    func saveExpandedStates() {
-        manageExpandedStatesUseCase.saveExpandedStates(expandedStates)
-    }
-
-    func isSelectedButton(for seriesOrder: String) -> Bool {
-        selectedBook?.seriesOrder == seriesOrder
-    }
-}
-
-extension MainViewModel {
-    /// 선택된 책의 Summary 정보를 반환하는 메서드
-    /// - Parameter seriesOrder: `Book`의 시리즈 순서 문자열
-    /// - Returns: (Summary 문자열, 버튼 타이틀 문자열) 튜플
-    func summary() -> (String, String)? {
-        guard let book = selectedBook else { return nil }
-
-        let isExpanded = state(for: book.seriesOrder)
-
-        return bookSummaryUseCase.summary(for: book, isExpanded: isExpanded)
-    }
+    // MARK: - Expand/Collapse Management
 
     /// 선택된 책의 접기/더보기 상태를 반환하는 메서드
-    /// - Parameter seriesOrder: `Book`의 시리즈 순서`
-    /// - Returns: 접기/더보기 상태 Boolean 값. 기본값은 `false`
+    ///
+    /// - Parameter seriesOrder: 시리즈 순서 문자열
+    /// - Returns: 접기/더보기 상태 Boolean 값(기본값은 `false`)
     private func state(for seriesOrder: String) -> Bool {
         guard let isExpanded = expandedStates[seriesOrder] else {
             expandedStates[seriesOrder] = false
@@ -111,12 +89,34 @@ extension MainViewModel {
     }
 
     /// 선택된 책의 접기/더보기 상태를 변환하는 메서드
-    /// - Parameter seriesOrder: `Book`의 시리즈 순서
     func toggleExpandedState() {
         guard let seriesOrder = selectedBook?.seriesOrder else { return }
 
         expandedStates[seriesOrder]?.toggle()
 
         saveExpandedStates()
+    }
+
+    /// 선택된 책의 Summary 정보를 반환하는 메서드
+    ///
+    /// - Returns: (Summary 문자열, 버튼 타이틀 문자열) 튜플
+    func summary() -> (String, String)? {
+        guard let book = selectedBook else { return nil }
+
+        let isExpanded = state(for: book.seriesOrder)
+
+        return bookSummaryUseCase.summary(for: book.summary, isExpanded: isExpanded)
+    }
+
+    /// 저장된 접기/더보기 상태를 불러오는 메서드
+    func fetchExpandedStates() {
+        guard let savedExpandedStates = manageExpandedStatesUseCase.fetchExpandedStates() else { return }
+
+        expandedStates = savedExpandedStates
+    }
+
+    /// 접기/더보기 상태를 저장하는 메서드
+    func saveExpandedStates() {
+        manageExpandedStatesUseCase.saveExpandedStates(expandedStates)
     }
 }

@@ -2,9 +2,10 @@ import UIKit
 
 struct AlertManager {
     /// 책 데이터를 가져오는 과정에서 발생하는 오류를 `Alert`으로 표시하는 메서드
+    ///
     /// - Parameters:
     ///   - viewController: `Alert`을 표시할 `ViewController`
-    ///   - error: 발생한 `BookError`
+    ///   - error: 발생한 `BookDataSourceError`
     static func showFetchBookError(on viewController: UIViewController, error: BookDataSourceError) {
         let message: String
 

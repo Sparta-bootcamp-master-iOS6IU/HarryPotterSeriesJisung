@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 enum UIConstant {
     static let verticalStackViewHeightMultiplier = 0.85

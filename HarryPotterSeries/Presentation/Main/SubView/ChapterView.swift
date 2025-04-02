@@ -1,6 +1,7 @@
 import UIKit
 import SnapKit
 
+/// 챕터를 표시하는 커스텀 `UIView`
 final class ChapterView: UIView {
     private let chaptersStackView = UIStackView()
     private let chaptersTitleLabel = UILabel()
@@ -15,46 +16,65 @@ final class ChapterView: UIView {
         nil
     }
 
+    /// UI 기본 설정 메서드
     private func configureUI() {
-        chaptersTitleLabel.text = UIConstant.StringKey.chapters
-        chaptersTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.medium)
-        chaptersTitleLabel.textColor = .black
+        configureLabel()
 
-        chaptersStackView.axis = .vertical
-        chaptersStackView.alignment = .leading
-        chaptersStackView.spacing = UIConstant.Spacing.small
-
-        [chaptersTitleLabel]
-            .forEach { chaptersStackView.addArrangedSubview($0) }
+        configureStackView()
 
         addSubview(chaptersStackView)
 
+        configureConstraints()
+    }
+
+    /// Label 기본 설정 메서드
+    private func configureLabel() {
+        chaptersTitleLabel.configure(
+            text: UIConstant.StringKey.chapters,
+            font: .boldSystemFont(ofSize: UIConstant.FontSize.medium),
+            textColor: .black
+        )
+    }
+
+    /// StackView 기본 설정 메서드
+    private func configureStackView() {
+        chaptersStackView.configure(axis: .vertical, alignment: .leading, spacing: UIConstant.Spacing.small)
+
+        chaptersStackView.addArrangedSubview(chaptersTitleLabel)
+    }
+
+    /// 제약 조건 설정 메서드
+    private func configureConstraints() {
         chaptersStackView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
 
+    /// 챕터 Label을 생성하는 메서드
+    ///
+    /// - Parameter title: 챕터 문자열
+    /// - Returns: 설정된 `UILabel` 인스턴스
     private func createChapterLabel(from title: String) -> UILabel {
         let chapterLabel = UILabel()
-
-        chapterLabel.text = title
-        chapterLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
-        chapterLabel.textColor = .darkGray
+        chapterLabel.configure(text: title, font: .systemFont(ofSize: UIConstant.FontSize.tiny), textColor: .darkGray)
 
         return chapterLabel
     }
 
+    /// 기존 챕터 목록을 모두 삭제하는 메서드
+    private func clearAllChapterLabel() {
+        chaptersStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    }
+
+    /// 챕터 목록을 업데이트하는 메서드
+    /// 
+    /// - Parameter chapters: 챕터 문자열 배열
     func updateUI(with chapters: [String]) {
-        deleteAllSubvies()
+        clearAllChapterLabel()
 
         chapters.forEach {
             let chapterLabel = createChapterLabel(from: $0)
-
             chaptersStackView.addArrangedSubview(chapterLabel)
         }
-    }
-
-    func deleteAllSubvies() {
-        chaptersStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     }
 }
