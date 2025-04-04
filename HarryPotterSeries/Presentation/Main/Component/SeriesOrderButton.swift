@@ -45,7 +45,6 @@ final class SeriesOrderButton: UIButton {
         backgroundColor = isSelected ? .systemBlue : .systemGray5
         setTitleColor(.white, for: .selected)
         setTitleColor(.systemBlue, for: .normal)
-
     }
 
     /// 버튼 타이틀 업데이트 메서드
