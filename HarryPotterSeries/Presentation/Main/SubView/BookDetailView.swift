@@ -1,6 +1,7 @@
 import UIKit
 import SnapKit
 
+/// 상세 정보를 표시하는 커스텀 `UIView`
 final class BookDetailView: UIView {
     private let detailContainerStackView = UIStackView()
     private let detailStackView = UIStackView()
@@ -27,16 +28,63 @@ final class BookDetailView: UIView {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        configureUI()
+        nil
     }
 
+    /// UI 기본 설정 메서드
     private func configureUI() {
-        imageView.contentMode = .scaleAspectFit
+        configureImageView()
 
         configureLabels()
+
         configureStackViews()
+
+        addSubview(detailContainerStackView)
+
+        configureConstraints()
+    }
+
+    /// 이미지 기본 설정 메서드
+    private func configureImageView() {
+        imageView.contentMode = .scaleAspectFit
+    }
+
+    /// Label 기본 설정 메서드
+    private func configureLabels() {
+        titleLabel.configure(
+            font: .boldSystemFont(ofSize: UIConstant.FontSize.large),
+            textColor: .black,
+            numberOfLines: UIConstant.DefaultLabel.numberOfLines
+        )
+
+        authorTitleLabel.configure(
+            text: UIConstant.StringKey.author,
+            font: .boldSystemFont(ofSize: UIConstant.FontSize.small),
+            textColor: .black
+        )
+        authorLabel.configure(font: .systemFont(ofSize: UIConstant.FontSize.medium), textColor: .darkGray)
+
+        releasedTitleLabel.configure(
+            text: UIConstant.StringKey.released,
+            font: .boldSystemFont(ofSize: UIConstant.FontSize.tiny),
+            textColor: .black
+        )
+        releasedLabel.configure(font: .systemFont(ofSize: UIConstant.FontSize.tiny), textColor: .gray)
+
+        pagesTitleLabel.configure(
+            text: UIConstant.StringKey.pages,
+            font: .boldSystemFont(ofSize: UIConstant.FontSize.tiny),
+            textColor: .black)
+        pagesLabel.configure(font: .systemFont(ofSize: UIConstant.FontSize.tiny), textColor: .gray)
+    }
+
+    /// StackView 기본 설정 메서드
+    private func configureStackViews() {
+        detailContainerStackView.configure(axis: .horizontal, alignment: .top, distribution: .equalSpacing)
+        detailStackView.configure(axis: .vertical, alignment: .leading, distribution: .equalSpacing)
+
+        [authorStackView, releasedStackView, pagesStackView]
+            .forEach { $0.configure(axis: .horizontal, alignment: .center, spacing: UIConstant.Spacing.small) }
 
         [authorTitleLabel, authorLabel]
             .forEach { authorStackView.addArrangedSubview($0) }
@@ -52,63 +100,13 @@ final class BookDetailView: UIView {
 
         [imageView, detailStackView]
             .forEach { detailContainerStackView.addArrangedSubview($0) }
-
-        addSubview(detailContainerStackView)
-
-        configureConstraints()
     }
 
-    private func configureLabels() {
-        titleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.large)
-        titleLabel.textColor = .black
-        titleLabel.numberOfLines = UIConstant.DefaultLabel.numberOfLines
-
-        authorTitleLabel.text = UIConstant.StringKey.author
-        authorTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.small)
-        authorTitleLabel.textColor = .black
-
-        authorLabel.font = .systemFont(ofSize: UIConstant.FontSize.medium)
-        authorLabel.textColor = .darkGray
-
-        releasedTitleLabel.text = UIConstant.StringKey.released
-        releasedTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.tiny)
-        releasedTitleLabel.textColor = .black
-
-        releasedLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
-        releasedLabel.textColor = .gray
-
-        pagesTitleLabel.text = UIConstant.StringKey.pages
-        pagesTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.tiny)
-        pagesTitleLabel.textColor = .black
-
-        pagesLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
-        pagesLabel.textColor = .gray
-    }
-
-    private func configureStackViews() {
-        detailContainerStackView.axis = .horizontal
-        detailContainerStackView.alignment = .top
-        detailContainerStackView.distribution = .equalSpacing
-
-        detailStackView.axis = .vertical
-        detailStackView.alignment = .leading
-        detailStackView.distribution = .equalSpacing
-
-        configureHorizontalStackview(authorStackView)
-        configureHorizontalStackview(releasedStackView)
-        configureHorizontalStackview(pagesStackView)
-    }
-
-    private func configureHorizontalStackview(_ stackView: UIStackView) {
-        stackView.axis = .horizontal
-        stackView.spacing = UIConstant.Spacing.small
-        stackView.alignment = .center
-    }
-
+    /// 제약 조건 설정 메서드
     private func configureConstraints() {
         detailContainerStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(UIConstant.Inset.medium)
-            $0.top.bottom.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.medium)
+            $0.verticalEdges.equalToSuperview()
         }
 
         imageView.snp.makeConstraints {
@@ -126,6 +124,9 @@ final class BookDetailView: UIView {
         }
     }
 
+    /// 상세 정보를 업데이트 하는 메서드
+    /// 
+    /// - Parameter book: 변경할 Book 객체
     func updateUI(with book: Book) {
         imageView.image = UIImage(named: book.image)
         titleLabel.text = book.title

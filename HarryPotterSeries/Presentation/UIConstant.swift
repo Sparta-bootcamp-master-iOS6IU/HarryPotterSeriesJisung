@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 enum UIConstant {
     static let verticalStackViewHeightMultiplier = 0.85
@@ -17,6 +17,7 @@ enum UIConstant {
     }
 
     enum Inset {
+        static let extraLarge = 32
         static let large = 20
         static let medium = 15
         static let tiny = 5
@@ -41,7 +42,7 @@ enum UIConstant {
 
     enum SeriesOrderButton {
         static let size = 40
-        static let radius = 20
+        static let radius: CGFloat = 20
     }
 
     enum BookImage {

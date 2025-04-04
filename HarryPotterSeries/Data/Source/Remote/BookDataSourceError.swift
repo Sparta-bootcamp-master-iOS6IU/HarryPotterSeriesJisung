@@ -1,4 +1,4 @@
-enum BookError: Error {
+enum BookDataSourceError: Error {
     case invalidPath,
          jsonDecodingError,
          unknownError

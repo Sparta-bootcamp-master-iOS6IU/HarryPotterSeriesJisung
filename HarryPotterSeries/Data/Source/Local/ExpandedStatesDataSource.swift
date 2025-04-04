@@ -1,17 +1,19 @@
 import Foundation
 
 struct ExpandedStatesDataSource {
-    private let usreDefaults = UserDefaults.standard
-    
-    /// 접기/더보기 상태 데이터를 `UserDefaults` 저장하는 메서드
+    private let userDefaults = UserDefaults.standard
+
+    /// 접기/더보기 상태를 `userDefaults`에 저장하는 메서드
+    ///
     /// - Parameter expandedStates: 접기/더보기 상태 딕셔너리
     func saveExpandedStates(_ expandedStates: [String: Bool]) {
-        usreDefaults.set(expandedStates, forKey: DataConstant.expandedStates)
+        userDefaults.set(expandedStates, forKey: DataConstant.expandedStates)
     }
-    
-    /// `UserDefaults`에서 접기/더보기 상태 데이터를 불러오는 메서드
-    /// - Returns: 저장된 접기/더보기 상태 딕셔너리
+
+    /// `userDefaults`에서 접기/더보기 상태를 불러오는 메서드
+    ///
+    /// - Returns: 저장된 접기/더보기 상태 딕셔너리(데이터가 없을 경우 `nil` 반환)
     func fetchExpandedStates() -> [String: Any]? {
-        usreDefaults.dictionary(forKey: DataConstant.expandedStates)
+        userDefaults.dictionary(forKey: DataConstant.expandedStates)
     }
 }
