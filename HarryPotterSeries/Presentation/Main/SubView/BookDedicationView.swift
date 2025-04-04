@@ -30,20 +30,22 @@ final class BookDedicationView: UIView {
 
     /// Label 기본 설정 메서드
     private func configureLabels() {
-        dedicationTitleLabel.text = UIConstant.StringKey.dedication
-        dedicationTitleLabel.font = .boldSystemFont(ofSize: UIConstant.FontSize.medium)
-        dedicationTitleLabel.textColor = .black
+        dedicationTitleLabel.configure(
+            text: UIConstant.StringKey.dedication,
+            font: .boldSystemFont(ofSize: UIConstant.FontSize.medium),
+            textColor: .black
+        )
 
-        dedicationLabel.font = .systemFont(ofSize: UIConstant.FontSize.tiny)
-        dedicationLabel.textColor = .darkGray
-        dedicationLabel.numberOfLines = UIConstant.DefaultLabel.numberOfLines
+        dedicationLabel.configure(
+            font: .systemFont(ofSize: UIConstant.FontSize.tiny),
+            textColor: .darkGray,
+            numberOfLines: UIConstant.DefaultLabel.numberOfLines
+        )
     }
 
     /// StackView 기본 설정 메서드
     private func configureStackView() {
-        dedicationStackView.axis = .vertical
-        dedicationStackView.alignment = .leading
-        dedicationStackView.spacing = CGFloat(UIConstant.Spacing.small)
+        dedicationStackView.configure(axis: .vertical, alignment: .leading, spacing: UIConstant.Spacing.small)
 
         [dedicationTitleLabel, dedicationLabel]
             .forEach { dedicationStackView.addArrangedSubview($0) }

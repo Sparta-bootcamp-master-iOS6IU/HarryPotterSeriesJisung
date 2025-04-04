@@ -6,5 +6,5 @@ protocol BookSummaryUseCase {
     ///   - summary: 요약 문자열
     ///   - isExpanded: 접기/더보기 상태를 나타내는 `Bool` 값`
     /// - Returns: `(summary: String, buttonTitle: String)` 튜플
-    func summary(for summary: String, isExpanded: Bool) -> (String, String)
+    func summaryWithTitle(for summary: String, isExpanded: Bool) -> (String, String?)
 }

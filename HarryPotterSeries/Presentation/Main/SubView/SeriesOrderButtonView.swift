@@ -29,7 +29,12 @@ final class SeriesOrderButtonView: UIView {
 
     /// StackView 기본 설정 메서드
     private func configureStackView() {
-        buttonStackView.configure(axis: .horizontal, alignment: .center, distribution: .equalSpacing)
+        buttonStackView.configure(
+            axis: .horizontal,
+            alignment: .center,
+            distribution: .equalSpacing,
+            spacing: UIConstant.Spacing.semiSmall
+        )
     }
 
     /// 제약 조건 설정 메서드

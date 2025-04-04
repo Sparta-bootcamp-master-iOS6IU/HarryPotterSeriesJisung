@@ -31,7 +31,7 @@ final class MainViewController: UIViewController {
 
         configureViewModelBindings()
 
-        configurButtoneBindings()
+        configurButtonBindings()
 
         mainViewModel.fetchBooks()
     }
@@ -68,7 +68,7 @@ final class MainViewController: UIViewController {
         }
 
         seriesOrderButtonView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.extraLarge)
+            $0.centerX.equalToSuperview()
             $0.top.equalTo(bookTitleLabel.snp.bottom).offset(UIConstant.Offset.medium)
         }
 
@@ -89,22 +89,22 @@ final class MainViewController: UIViewController {
 
         bookDedicationView.snp.makeConstraints {
             $0.top.equalTo(bookDetailView.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
         }
 
         bookSummaryView.snp.makeConstraints {
             $0.top.equalTo(bookDedicationView.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
         }
 
         summaryToggleButton.snp.makeConstraints {
             $0.top.equalTo(bookSummaryView.snp.bottom)
-            $0.trailing.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
         }
 
         chapterView.snp.makeConstraints {
             $0.top.equalTo(summaryToggleButton.snp.bottom).offset(UIConstant.Offset.extraLarge)
-            $0.horizontalEdges.equalToSuperview().inset(UIConstant.Inset.large)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIConstant.Inset.large)
             $0.bottom.equalToSuperview()
         }
     }
@@ -134,7 +134,7 @@ final class MainViewController: UIViewController {
     }
 
     /// 버튼 액션 설정 메서드
-    private func configurButtoneBindings() {
+    private func configurButtonBindings() {
         summaryToggleButton.onButtonTapped = { [weak self] in
             self?.mainViewModel.toggleExpandedState()
 
@@ -216,10 +216,10 @@ final class MainViewController: UIViewController {
 
     /// Summary 정보를 업데이트 하는 메서드
     private func updateSummary() {
-        guard let (summary, buttonTitle) = mainViewModel.summary() else { return }
+        guard let (summary, buttonTitle) = mainViewModel.summaryWithTitle() else { return }
 
         bookSummaryView.updateSummary(with: summary)
-        summaryToggleButton.updateTitle(with: buttonTitle)
+        summaryToggleButton.updateButton(with: buttonTitle)
     }
 
     /// 책 데이터를 가져오는데 실패할 경우, 오류 메시지를 표시하는 메서드

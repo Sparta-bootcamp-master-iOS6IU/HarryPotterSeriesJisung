@@ -69,7 +69,6 @@ final class MainViewModel {
         }
 
         selectedBook = book
-        onBookSelected?()
     }
 
     // MARK: - Expand/Collapse Management
@@ -79,12 +78,7 @@ final class MainViewModel {
     /// - Parameter seriesOrder: 시리즈 순서 문자열
     /// - Returns: 접기/더보기 상태 Boolean 값(기본값은 `false`)
     private func state(for seriesOrder: String) -> Bool {
-        guard let isExpanded = expandedStates[seriesOrder] else {
-            expandedStates[seriesOrder] = false
-
-            return false
-        }
-
+        guard let isExpanded = expandedStates[seriesOrder] else { return false }
         return isExpanded
     }
 
@@ -100,12 +94,19 @@ final class MainViewModel {
     /// 선택된 책의 Summary 정보를 반환하는 메서드
     ///
     /// - Returns: (Summary 문자열, 버튼 타이틀 문자열) 튜플
-    func summary() -> (String, String)? {
+    func summaryWithTitle() -> (String, String?)? {
         guard let book = selectedBook else { return nil }
 
-        let isExpanded = state(for: book.seriesOrder)
+        let seriesOrder = book.seriesOrder
 
-        return bookSummaryUseCase.summary(for: book.summary, isExpanded: isExpanded)
+        let isExpanded = state(for: seriesOrder)
+        let (summary, title) = bookSummaryUseCase.summaryWithTitle(for: book.summary, isExpanded: isExpanded)
+
+        if title != .none {
+            expandedStates[seriesOrder] = isExpanded
+        }
+
+        return (summary, title)
     }
 
     /// 저장된 접기/더보기 상태를 불러오는 메서드

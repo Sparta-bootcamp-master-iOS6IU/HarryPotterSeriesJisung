@@ -30,10 +30,22 @@ final class SummaryToggleButton: UIButton {
         addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
 
-    /// 버튼 타이틀을 업데이트하는 메서드
-    /// 
+    /// 버튼 숨김 여부를 확인하는 메서드
+    ///
+    /// - Parameter title: 옵셔널 문자열
+    /// - Returns: 숨김 여부 `Bool` 값
+    private func shouldHideButton(for title: String?) -> Bool {
+        title == .none
+    }
+
+    /// 버튼을 업데이트하는 메서드
+    ///
+    /// `nil`이면 버튼을 숨기고, 아니라면 타이틀을 변경
+    ///
     /// - Parameter title: 변경할 버튼 타이틀
-    func updateTitle(with title: String) {
+    func updateButton(with title: String?) {
+        isHidden = shouldHideButton(for: title)
+
         setTitle(title, for: .normal)
     }
 

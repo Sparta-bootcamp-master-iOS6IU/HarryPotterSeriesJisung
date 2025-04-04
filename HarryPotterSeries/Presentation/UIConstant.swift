@@ -6,6 +6,7 @@ enum UIConstant {
     enum Spacing {
         static let large: CGFloat = 20
         static let medium: CGFloat = 16
+        static let semiSmall: CGFloat = 10
         static let small: CGFloat = 8
     }
 
